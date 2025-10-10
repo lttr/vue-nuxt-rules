@@ -6,6 +6,7 @@
 ## Vue components
 
 - ALWAYS use TypeScript type-based syntax for defineProps() instead of runtime PropType declarations
+- ALWAYS destructure props directly from defineProps() to maintain reactivity and enable inline defaults; if no props are used in the script, call defineProps() without destructuring
 - ALWAYS use `<script setup lang="ts">` for component's script section
 - ALWAYS use key in v-for loops
 - ALWAYS use multi-word component names except for Nuxt pages and layouts

@@ -26,6 +26,10 @@ export default defineConfig({
             link: "/rules/define-props-with-typescript",
           },
           {
+            text: "Destructure Props",
+            link: "/rules/destructure-props",
+          },
+          {
             text: "Group script by logical concerns",
             link: "/rules/group-by-functionality",
           },
