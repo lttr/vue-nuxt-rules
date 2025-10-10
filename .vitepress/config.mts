@@ -18,6 +18,14 @@ export default defineConfig({
         text: "Rules",
         items: [
           {
+            text: "defineEmits with TypeScript",
+            link: "/rules/define-emits-with-typescript",
+          },
+          {
+            text: "Define Props With TypeScript",
+            link: "/rules/define-props-with-typescript",
+          },
+          {
             text: "Multi-word component names",
             link: "/multi-word-component-names.md",
           },
@@ -28,6 +36,10 @@ export default defineConfig({
           {
             text: "Prefer Ref Over Reactive",
             link: "/rules/prefer-ref-over-reactive",
+          },
+          {
+            text: "Script Setup with TypeScript",
+            link: "/rules/script-setup-with-typescript",
           },
         ],
       },

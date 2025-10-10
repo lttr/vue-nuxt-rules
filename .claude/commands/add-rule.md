@@ -37,7 +37,7 @@ If it exists, inform the user and stop.
 Create a new markdown file at `content/rules/<rule-name>.md` with the following structure:
 
 ```markdown
-# <Human-readable Title>
+# <Human-readable title>
 
 <Description of the rule and why it's important. Include any context about when this applies and any exceptions.>
 
