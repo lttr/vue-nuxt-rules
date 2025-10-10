@@ -42,6 +42,14 @@ export default defineConfig({
             link: "/rules/prefer-ref-over-reactive",
           },
           {
+            text: "Prefer VueUse",
+            link: "/rules/prefer-vueuse",
+          },
+          {
+            text: "Same name prop shorthand",
+            link: "/rules/same-name-prop-shorthand",
+          },
+          {
             text: "Script Setup with TypeScript",
             link: "/rules/script-setup-with-typescript",
           },

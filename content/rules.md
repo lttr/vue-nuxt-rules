@@ -9,4 +9,6 @@
 - [Keyed `v-for`](/rules/keyed-v-for)
 - [Prefer defineModel](/rules/prefer-definemodel)
 - [Prefer ref over reactive](/rules/prefer-ref-over-reactive)
+- [Prefer VueUse](/rules/prefer-vueuse)
+- [Same name prop shorthand](/rules/same-name-prop-shorthand)
 - [Script setup with TypeScript](/rules/script-setup-with-typescript)
