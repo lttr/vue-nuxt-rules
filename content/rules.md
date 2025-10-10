@@ -12,3 +12,4 @@
 - [Prefer VueUse](/rules/prefer-vueuse)
 - [Same name prop shorthand](/rules/same-name-prop-shorthand)
 - [Script setup with TypeScript](/rules/script-setup-with-typescript)
+- [Use "of" instead of "in" for v-for](/rules/use-of-instead-of-in-for-v-for)

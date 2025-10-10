@@ -53,6 +53,10 @@ export default defineConfig({
             text: "Script Setup with TypeScript",
             link: "/rules/script-setup-with-typescript",
           },
+          {
+            text: "Use \"of\" instead of \"in\" for v-for",
+            link: "/rules/use-of-instead-of-in-for-v-for",
+          },
         ],
       },
     ],
