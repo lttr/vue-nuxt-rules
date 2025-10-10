@@ -1,28 +1,29 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from "vitepress";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Vue & Nuxt Rules",
-  description: "A set of opinionated code style rules for Vue and Nuxt based projects.",
+  description:
+    "A set of opinionated code style rules for Vue and Nuxt based projects.",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: "Home", link: "/" },
+      { text: "Rules", link: "/rules" },
     ],
 
     sidebar: [
       {
-        text: 'Examples',
+        text: "Rules",
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
-        ]
-      }
+          { text: "Rule 1", link: "/rules" },
+          { text: "Rule 2", link: "/rules" },
+        ],
+      },
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
-    ]
-  }
-})
+      { icon: "github", link: "https://github.com/lttr/vue-nuxt-rules" },
+    ],
+  },
+});

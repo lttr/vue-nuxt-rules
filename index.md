@@ -5,21 +5,17 @@ layout: home
 hero:
   name: "Vue & Nuxt Rules"
   text: "A set of opinionated code style rules for Vue and Nuxt based projects."
-  tagline: My great project tagline
+  tagline: Let the tools work for you
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
-    - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Show me the rules
+      link: /rules
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Opinionated
+    details: Not for every project, a good start anyway
+  - title: Automated
+    details: Most rules should be automatable by eslint, typescript or at least with an AI based tool
+  - title: Pragmatic
+    details: There is not best way to do everything. Every rule have a reason, but if you have different reason, maybe alter the rule and move forward!
 ---
-
