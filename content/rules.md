@@ -4,4 +4,5 @@
 
 - [Multi-word component names](/rules/multi-word-component-names)
 - [Keyed `v-for`](/rules/keyed-v-for)
-- [Prefer Ref Over Reactive](/rules/prefer-ref-over-reactive)
+- [Prefer defineModel](/rules/prefer-definemodel)
+- [Prefer ref over reactive](/rules/prefer-ref-over-reactive)

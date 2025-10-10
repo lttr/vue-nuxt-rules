@@ -22,6 +22,10 @@ export default defineConfig({
             link: "/multi-word-component-names.md",
           },
           {
+            text: "Prefer defineModel",
+            link: "/rules/prefer-definemodel",
+          },
+          {
             text: "Prefer Ref Over Reactive",
             link: "/rules/prefer-ref-over-reactive",
           },
