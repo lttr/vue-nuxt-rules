@@ -1,4 +1,4 @@
-import { defineConfig } from "vitepress";
+import { defineConfig } from "vitepress"
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -26,4 +26,4 @@ export default defineConfig({
       { icon: "github", link: "https://github.com/lttr/vue-nuxt-rules" },
     ],
   },
-});
+})
