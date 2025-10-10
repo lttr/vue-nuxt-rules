@@ -13,11 +13,18 @@ export default defineConfig({
     ],
 
     sidebar: [
+      { text: "List of all rules", link: "/rules.md" },
       {
         text: "Rules",
         items: [
-          { text: "Rule 1", link: "/rules" },
-          { text: "Rule 2", link: "/rules" },
+          {
+            text: "Multi-word component names",
+            link: "/multi-word-component-names.md",
+          },
+          {
+            text: "Prefer Ref Over Reactive",
+            link: "/rules/prefer-ref-over-reactive",
+          },
         ],
       },
     ],
@@ -26,4 +33,6 @@ export default defineConfig({
       { icon: "github", link: "https://github.com/lttr/vue-nuxt-rules" },
     ],
   },
+  cleanUrls: true,
+  srcDir: "./content",
 })
