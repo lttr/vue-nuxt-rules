@@ -26,6 +26,10 @@ export default defineConfig({
             link: "/rules/define-props-with-typescript",
           },
           {
+            text: "Group script by logical concerns",
+            link: "/rules/group-by-functionality",
+          },
+          {
             text: "Multi-word component names",
             link: "/multi-word-component-names.md",
           },
