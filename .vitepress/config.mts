@@ -58,6 +58,10 @@ export default defineConfig({
             link: "/rules/script-setup-with-typescript",
           },
           {
+            text: "Template on the top",
+            link: "/rules/template-on-the-top",
+          },
+          {
             text: "Use \"of\" instead of \"in\" for v-for",
             link: "/rules/use-of-instead-of-in-for-v-for",
           },
