@@ -1,0 +1,23 @@
+# This configuration is for install, build and start commands
+# powered by Nixpacks.
+# https://nixpacks.com/docs/configuration/file
+
+# Nixpacks can figure the provider out automatically
+providers = ["node"]
+
+# NodeJS version -> field "engines": { "node" } in package.json
+[variables]
+NIXPACKS_NODE_VERSION = '22'
+
+[phases.install]
+onlyIncludeFiles = [
+  ".npmrc",
+  "package.json",
+  "pnpm-lock.yaml",
+]
+
+# Package manager -> depending on the lockfile detected
+
+# Build command -> the build script in package.json
+
+# Start command -> not needed for static sites, Coolify serves via Nginx
