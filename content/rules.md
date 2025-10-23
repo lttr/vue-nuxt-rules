@@ -5,7 +5,7 @@
 - [Define emits with TypeScript](/rules/define-emits-with-typescript)
 - [Define props with TypeScript](/rules/define-props-with-typescript)
 - [Destructure props](/rules/destructure-props)
-- [Group script by logical concerns](/rules/group-by-functionality)
+- [Group script by logical concerns](/rules/group-script-by-logical-concerns)
 - [Multi-word component names](/rules/multi-word-component-names)
 - [Keyed `v-for`](/rules/keyed-v-for)
 - [Prefer defineModel](/rules/prefer-definemodel)
