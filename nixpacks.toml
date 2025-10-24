@@ -1,11 +1,8 @@
-# This configuration is for install, build and start commands
-# powered by Nixpacks.
+# Nixpacks configuration for VitePress static site
 # https://nixpacks.com/docs/configuration/file
 
-# Nixpacks can figure the provider out automatically
 providers = ["node"]
 
-# NodeJS version -> field "engines": { "node" } in package.json
 [variables]
 NIXPACKS_NODE_VERSION = '22'
 
@@ -16,8 +13,9 @@ onlyIncludeFiles = [
   "pnpm-lock.yaml",
 ]
 
-# Package manager -> depending on the lockfile detected
+[phases.build]
+cmds = ["pnpm run build"]
 
-# Build command -> the build script in package.json
-
-# Start command -> not needed for static sites, Coolify serves via Nginx
+# Static site - VitePress output directory
+[staticAssets]
+directory = ".vitepress/dist"
