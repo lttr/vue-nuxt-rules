@@ -10,39 +10,45 @@ export default defineConfig({
     nav: [
       { text: "Home", link: "/" },
       { text: "Rules", link: "/rules" },
+      { text: "AI Agent Rules", link: "/ai-agent-rules" },
     ],
 
     sidebar: [
-      { text: "List of all rules", link: "/rules.md" },
+      { text: "List of all rules", link: "/rules" },
+      { text: "AI Agent Rules", link: "/ai-agent-rules" },
       {
         text: "Rules",
         items: [
           {
-            text: "defineEmits with TypeScript",
+            text: "Define emits with TypeScript",
             link: "/rules/define-emits-with-typescript",
           },
           {
-            text: "Define Props With TypeScript",
+            text: "Define props with TypeScript",
             link: "/rules/define-props-with-typescript",
           },
           {
-            text: "Destructure Props",
+            text: "Destructure props",
             link: "/rules/destructure-props",
           },
           {
             text: "Group script by logical concerns",
-            link: "/rules/group-by-functionality",
+            link: "/rules/group-script-by-logical-concerns",
           },
           {
             text: "Multi-word component names",
-            link: "/multi-word-component-names.md",
+            link: "/rules/multi-word-component-names",
+          },
+          {
+            text: "Keyed v-for",
+            link: "/rules/keyed-v-for",
           },
           {
             text: "Prefer defineModel",
             link: "/rules/prefer-definemodel",
           },
           {
-            text: "Prefer Ref Over Reactive",
+            text: "Prefer ref over reactive",
             link: "/rules/prefer-ref-over-reactive",
           },
           {
@@ -54,7 +60,7 @@ export default defineConfig({
             link: "/rules/same-name-prop-shorthand",
           },
           {
-            text: "Script Setup with TypeScript",
+            text: "Script setup with TypeScript",
             link: "/rules/script-setup-with-typescript",
           },
           {
@@ -62,7 +68,7 @@ export default defineConfig({
             link: "/rules/template-on-the-top",
           },
           {
-            text: "Use \"of\" instead of \"in\" for v-for",
+            text: "Use of instead of in for v-for",
             link: "/rules/use-of-instead-of-in-for-v-for",
           },
         ],
