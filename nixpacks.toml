@@ -8,7 +8,6 @@ NIXPACKS_NODE_VERSION = '22'
 
 [phases.install]
 onlyIncludeFiles = [
-  ".npmrc",
   "package.json",
   "pnpm-lock.yaml",
 ]
