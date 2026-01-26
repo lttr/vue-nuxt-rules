@@ -14,22 +14,17 @@ export default defineConfig({
     ],
 
     sidebar: [
-      { text: "List of all rules", link: "/rules" },
+      { text: "All Rules", link: "/rules" },
       { text: "AI Agent Rules", link: "/ai-agent-rules" },
       {
-        text: "Rules",
+        text: "Vue SFC Structure",
+        collapsed: false,
         items: [
+          { text: "Overview", link: "/rules/sfc-structure" },
+          { text: "Template on the top", link: "/rules/template-on-the-top" },
           {
-            text: "Define emits with TypeScript",
-            link: "/rules/define-emits-with-typescript",
-          },
-          {
-            text: "Define props with TypeScript",
-            link: "/rules/define-props-with-typescript",
-          },
-          {
-            text: "Destructure props",
-            link: "/rules/destructure-props",
+            text: "Script setup with TypeScript",
+            link: "/rules/script-setup-with-typescript",
           },
           {
             text: "Group script by logical concerns",
@@ -39,34 +34,40 @@ export default defineConfig({
             text: "Multi-word component names",
             link: "/rules/multi-word-component-names",
           },
+        ],
+      },
+      {
+        text: "Props & State",
+        collapsed: false,
+        items: [
+          { text: "Overview", link: "/rules/props-state" },
           {
-            text: "Keyed v-for",
-            link: "/rules/keyed-v-for",
+            text: "Define props with TypeScript",
+            link: "/rules/define-props-with-typescript",
           },
           {
-            text: "Prefer defineModel",
-            link: "/rules/prefer-definemodel",
+            text: "Define emits with TypeScript",
+            link: "/rules/define-emits-with-typescript",
           },
-          {
-            text: "Prefer ref over reactive",
-            link: "/rules/prefer-ref-over-reactive",
-          },
-          {
-            text: "Prefer VueUse",
-            link: "/rules/prefer-vueuse",
-          },
+          { text: "Destructure props", link: "/rules/destructure-props" },
           {
             text: "Same name prop shorthand",
             link: "/rules/same-name-prop-shorthand",
           },
+          { text: "Prefer defineModel", link: "/rules/prefer-definemodel" },
           {
-            text: "Script setup with TypeScript",
-            link: "/rules/script-setup-with-typescript",
+            text: "Prefer ref over reactive",
+            link: "/rules/prefer-ref-over-reactive",
           },
-          {
-            text: "Template on the top",
-            link: "/rules/template-on-the-top",
-          },
+          { text: "Prefer VueUse", link: "/rules/prefer-vueuse" },
+        ],
+      },
+      {
+        text: "Template Directives",
+        collapsed: false,
+        items: [
+          { text: "Overview", link: "/rules/template-directives" },
+          { text: "Keyed v-for", link: "/rules/keyed-v-for" },
           {
             text: "Use of instead of in for v-for",
             link: "/rules/use-of-instead-of-in-for-v-for",
@@ -75,16 +76,32 @@ export default defineConfig({
       },
       {
         text: "Composables",
+        collapsed: false,
         items: [
-          { text: "Composables overview", link: "/rules/composables" },
-          { text: "Call in setup context", link: "/rules/composables-setup-context" },
+          { text: "Overview", link: "/rules/composables" },
+          {
+            text: "Call in setup context",
+            link: "/rules/composables-setup-context",
+          },
           { text: "Use 'use' prefix", link: "/rules/composables-naming" },
-          { text: "Return refs in plain object", link: "/rules/composables-return-refs" },
+          {
+            text: "Return refs in plain object",
+            link: "/rules/composables-return-refs",
+          },
           { text: "Clean up side effects", link: "/rules/composables-cleanup" },
           { text: "Composables vs utils", link: "/rules/composables-vs-utils" },
-          { text: "Organize by concern", link: "/rules/composables-organize-by-concern" },
-          { text: "Flexible input types", link: "/rules/composables-input-flexibility" },
-          { text: "Single responsibility", link: "/rules/composables-single-responsibility" },
+          {
+            text: "Organize by concern",
+            link: "/rules/composables-organize-by-concern",
+          },
+          {
+            text: "Flexible input types",
+            link: "/rules/composables-input-flexibility",
+          },
+          {
+            text: "Single responsibility",
+            link: "/rules/composables-single-responsibility",
+          },
           { text: "Async patterns", link: "/rules/composables-async-patterns" },
         ],
       },
