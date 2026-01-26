@@ -73,6 +73,21 @@ export default defineConfig({
           },
         ],
       },
+      {
+        text: "Composables",
+        items: [
+          { text: "Composables overview", link: "/rules/composables" },
+          { text: "Call in setup context", link: "/rules/composables-setup-context" },
+          { text: "Use 'use' prefix", link: "/rules/composables-naming" },
+          { text: "Return refs in plain object", link: "/rules/composables-return-refs" },
+          { text: "Clean up side effects", link: "/rules/composables-cleanup" },
+          { text: "Composables vs utils", link: "/rules/composables-vs-utils" },
+          { text: "Organize by concern", link: "/rules/composables-organize-by-concern" },
+          { text: "Flexible input types", link: "/rules/composables-input-flexibility" },
+          { text: "Single responsibility", link: "/rules/composables-single-responsibility" },
+          { text: "Async patterns", link: "/rules/composables-async-patterns" },
+        ],
+      },
     ],
 
     socialLinks: [

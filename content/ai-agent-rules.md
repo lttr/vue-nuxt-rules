@@ -19,5 +19,17 @@
 - PREFER VueUse composables and utility functions over custom implementations for common tasks like state management, DOM interactions, and browser APIs
 - USE `defineModel()` for v-model implementations instead of manually defining props and emits
 
+## Composables
+
+- ALWAYS call composables in <script setup> or setup(), never in utils/callbacks/promises
+- ALWAYS prefix composable names with "use" (useMouse, useFetch)
+- ALWAYS return plain object with refs from composables, not reactive()
+- ALWAYS cleanup side effects in onUnmounted(); use onMounted() for DOM operations
+- Only create composables when needing reactivity/lifecycle; pure functions -> utils. Composables handle state/logic, not DOM/CSS.
+- Group code by logical concern, not by Vue API type (don't cluster all computed together)
+- PREFER toValue() to normalize inputs - accept refs, getters, and plain values
+- Split monolithic composables by concern (useCart -> useAddToCart, useFetchCart, useRemoveFromCart)
+- Use watchEffect for reactive data fetching; always expose loading/error state refs
+
 ## Styling
 ```

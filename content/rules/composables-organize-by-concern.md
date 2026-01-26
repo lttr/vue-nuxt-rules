@@ -1,0 +1,51 @@
+# Organize composable code by logical concern
+
+Within composables, group related code together by feature/concern rather than by Vue API type. Don't cluster all refs in one place, all computed in another, and all watchers elsewhere.
+
+Grouping by concern keeps related logic together, making it easier to understand, maintain, and extract into smaller composables when needed.
+
+Example:
+
+```typescript
+// Good - grouped by concern
+function useUserProfile(userId: Ref<string>) {
+  // User data concern
+  const user = ref<User | null>(null)
+  const isLoading = ref(false)
+  const fetchUser = async () => { /* ... */ }
+
+  // Avatar concern
+  const avatarUrl = computed(() => user.value?.avatar ?? defaultAvatar)
+  const updateAvatar = async (file: File) => { /* ... */ }
+
+  return { user, isLoading, avatarUrl, fetchUser, updateAvatar }
+}
+
+// Bad - grouped by API type
+function useUserProfile(userId: Ref<string>) {
+  // All refs together
+  const user = ref(null)
+  const isLoading = ref(false)
+
+  // All computed together
+  const avatarUrl = computed(() => /* ... */)
+
+  // All functions together
+  const fetchUser = async () => { /* ... */ }
+  const updateAvatar = async () => { /* ... */ }
+}
+```
+
+## Rule for AI agents
+
+```
+Group code by logical concern, not by Vue API type (don't cluster all computed together)
+```
+
+## Eslint rule
+
+No ESLint rule available
+
+## Source
+
+- https://vuejs.org/guide/extras/composition-api-faq.html#more-flexible-code-organization
