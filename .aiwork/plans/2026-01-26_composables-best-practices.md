@@ -13,6 +13,7 @@ Create individual atomic rules + overview page for composables best practices.
 ## Structure
 
 ### Overview Page
+
 `content/rules/composables.md` - high-level intro + links to individual rules
 
 ### Individual Rules (9 files)
@@ -50,4 +51,3 @@ Create individual atomic rules + overview page for composables best practices.
 
 1. https://vuejs.org/guide/reusability/composables.html
 2. https://dev.to/jacobandrewsky/good-practices-and-design-patterns-for-vue-composables-24lk
-3. https://medium.com/@vasanthancomrads/custom-composables-in-vue-3-clean-code-through-reusability-a698bb1d81b3
