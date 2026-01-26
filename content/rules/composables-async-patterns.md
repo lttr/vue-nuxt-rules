@@ -30,9 +30,11 @@ function useFetch<T>(url: MaybeRefOrGetter<string>) {
 }
 
 // Usage - auto-refetches when userId changes
-const { data: user, error, isLoading } = useFetch(
-  () => `/api/users/${userId.value}`
-)
+const {
+  data: user,
+  error,
+  isLoading,
+} = useFetch(() => `/api/users/${userId.value}`)
 ```
 
 The `watchEffect()` automatically tracks `url` as a dependency and re-runs whenever it changes.

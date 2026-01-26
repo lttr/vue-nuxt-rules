@@ -15,8 +15,12 @@ export function useCounter() {
 }
 
 // Bad - unclear function purpose
-export function counter() { /* ... */ }
-export function getCounter() { /* ... */ }
+export function counter() {
+  /* ... */
+}
+export function getCounter() {
+  /* ... */
+}
 ```
 
 ## Rule for AI agents

@@ -5,7 +5,7 @@ Use `toValue()` to normalize input arguments, allowing composables to accept ref
 Example:
 
 ```typescript
-import { toValue, type MaybeRefOrGetter } from 'vue'
+import { toValue, type MaybeRefOrGetter } from "vue"
 
 // Good - accepts multiple input types
 function useFetch(url: MaybeRefOrGetter<string>) {
@@ -16,9 +16,9 @@ function useFetch(url: MaybeRefOrGetter<string>) {
 }
 
 // All these work:
-useFetch('/api/users')                    // plain string
-useFetch(urlRef)                          // ref
-useFetch(() => `/api/users/${id.value}`)  // getter
+useFetch("/api/users") // plain string
+useFetch(urlRef) // ref
+useFetch(() => `/api/users/${id.value}`) // getter
 ```
 
 The `MaybeRefOrGetter<T>` type represents values that can be `T`, `Ref<T>`, or `() => T`. Combined with `toValue()`, this pattern maximizes composable reusability.

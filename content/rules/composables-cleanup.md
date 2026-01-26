@@ -16,12 +16,12 @@ function useMouse() {
 
   // DOM operation - only runs client-side
   onMounted(() => {
-    window.addEventListener('mousemove', update)
+    window.addEventListener("mousemove", update)
   })
 
   // Cleanup - prevents memory leaks
   onUnmounted(() => {
-    window.removeEventListener('mousemove', update)
+    window.removeEventListener("mousemove", update)
   })
 
   return { x, y }

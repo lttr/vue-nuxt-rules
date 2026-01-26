@@ -8,32 +8,50 @@ Example:
 // Bad - monolithic composable
 function useCart() {
   const items = ref([])
-  const addItem = () => { /* ... */ }
-  const removeItem = () => { /* ... */ }
-  const fetchCart = () => { /* ... */ }
-  const checkout = () => { /* ... */ }
-  const applyDiscount = () => { /* ... */ }
+  const addItem = () => {
+    /* ... */
+  }
+  const removeItem = () => {
+    /* ... */
+  }
+  const fetchCart = () => {
+    /* ... */
+  }
+  const checkout = () => {
+    /* ... */
+  }
+  const applyDiscount = () => {
+    /* ... */
+  }
   // 200 more lines...
 }
 
 // Good - split by responsibility
 function useCartItems() {
   const items = ref([])
-  const addItem = () => { /* ... */ }
-  const removeItem = () => { /* ... */ }
+  const addItem = () => {
+    /* ... */
+  }
+  const removeItem = () => {
+    /* ... */
+  }
   return { items, addItem, removeItem }
 }
 
 function useCartFetch() {
   const { items } = useCartItems()
   const isLoading = ref(false)
-  const fetchCart = async () => { /* ... */ }
+  const fetchCart = async () => {
+    /* ... */
+  }
   return { fetchCart, isLoading }
 }
 
 function useCheckout() {
   const { items } = useCartItems()
-  const checkout = async () => { /* ... */ }
+  const checkout = async () => {
+    /* ... */
+  }
   return { checkout }
 }
 ```
@@ -53,4 +71,3 @@ No ESLint rule available
 ## Source
 
 - https://dev.to/jacobandrewsky/good-practices-and-design-patterns-for-vue-composables-24lk
-- https://medium.com/@vasanthancomrads/custom-composables-in-vue-3-clean-code-through-reusability-a698bb1d81b3
