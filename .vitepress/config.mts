@@ -103,6 +103,14 @@ export default defineConfig({
             link: "/rules/composables-single-responsibility",
           },
           { text: "Async patterns", link: "/rules/composables-async-patterns" },
+          {
+            text: "Thin composables",
+            link: "/rules/composables-thin-composables",
+          },
+          {
+            text: "Progressive extraction",
+            link: "/rules/composables-progressive-extraction",
+          },
         ],
       },
     ],

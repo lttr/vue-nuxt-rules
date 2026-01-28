@@ -4,6 +4,10 @@ Within composables, group related code together by feature/concern rather than b
 
 Grouping by concern keeps related logic together, making it easier to understand, maintain, and extract into smaller composables when needed.
 
+### Internal ordering
+
+Within each concern group, follow this order: state → metadata (loading, error) → methods → return statement. This creates a consistent reading flow across all composables.
+
 Example:
 
 ```typescript
@@ -39,7 +43,7 @@ function useUserProfile(userId: Ref<string>) {
 ## Rule for AI agents
 
 ```
-Group code by logical concern, not by Vue API type (don't cluster all computed together)
+Group code by logical concern, not by Vue API type (don't cluster all computed together). Within each concern: state → metadata (loading/error) → methods → return.
 ```
 
 ## Eslint rule

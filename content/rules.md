@@ -37,3 +37,5 @@
 - [Accept flexible input types](/rules/composables-input-flexibility)
 - [Single responsibility](/rules/composables-single-responsibility)
 - [Async patterns](/rules/composables-async-patterns)
+- [Thin composables](/rules/composables-thin-composables)
+- [Progressive extraction](/rules/composables-progressive-extraction)

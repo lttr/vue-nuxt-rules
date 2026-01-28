@@ -1,0 +1,49 @@
+# Keep composables thin — functional core, imperative shell
+
+Separate pure business logic from the reactivity wrapper. The composable acts as a thin "imperative shell" that wires reactive state to pure functions (the "functional core").
+
+This makes business logic testable without Vue context and keeps composables focused on reactivity plumbing.
+
+Example:
+
+```typescript
+// Functional core — pure, testable without Vue
+function calculateDiscount(price: number, tier: string): number {
+  if (tier === "gold") return price * 0.8
+  if (tier === "silver") return price * 0.9
+  return price
+}
+
+// Imperative shell — thin composable
+export function useDiscount(price: Ref<number>, tier: Ref<string>) {
+  const discounted = computed(() => calculateDiscount(price.value, tier.value))
+  return { discounted }
+}
+```
+
+```typescript
+// Bad — business logic buried in reactivity
+export function useDiscount(price: Ref<number>, tier: Ref<string>) {
+  const discounted = computed(() => {
+    if (tier.value === "gold") return price.value * 0.8
+    if (tier.value === "silver") return price.value * 0.9
+    return price.value
+  })
+  return { discounted }
+}
+```
+
+## Rule for AI agents
+
+```
+Separate pure business logic into plain functions; composable is a thin reactive wrapper. Test pure functions without Vue context.
+```
+
+## Eslint rule
+
+No ESLint rule available
+
+## Source
+
+- https://michaelnthiessen.com/composable-patterns-in-vue
+- https://alexop.dev/posts/mastering-vue-3-composables-a-comprehensive-style-guide/

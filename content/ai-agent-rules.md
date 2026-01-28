@@ -22,14 +22,16 @@
 ## Composables
 
 - ALWAYS call composables in <script setup> or setup(), never in utils/callbacks/promises
-- ALWAYS prefix composable names with "use" (useMouse, useFetch)
+- ALWAYS prefix composable names with "use" (useMouse, useFetch). Name files as useFeatureName.ts (camelCase). One composable per file.
 - ALWAYS return plain object with refs from composables, not reactive()
 - ALWAYS cleanup side effects in onUnmounted(); use onMounted() for DOM operations
-- Only create composables when needing reactivity/lifecycle; pure functions -> utils. Composables handle state/logic, not DOM/CSS.
-- Group code by logical concern, not by Vue API type (don't cluster all computed together)
+- Only create composables when needing reactivity/lifecycle; pure functions -> utils. Composables handle state/logic, not DOM/CSS/UI side effects. No toasts/modals inside composables — expose state, let components decide presentation.
+- Group code by logical concern, not by Vue API type (don't cluster all computed together). Within each concern: state → metadata (loading/error) → methods → return.
 - PREFER toValue() to normalize inputs - accept refs, getters, and plain values
 - Split monolithic composables by concern (useCart -> useAddToCart, useFetchCart, useRemoveFromCart)
 - Use watchEffect for reactive data fetching; always expose loading/error state refs
+- Separate pure business logic into plain functions; composable is a thin reactive wrapper. Test pure functions without Vue context.
+- Don't extract to shared composables/ until a second consumer exists. Ladder: inline → colocated file → shared composables/.
 
 ## Styling
 ```

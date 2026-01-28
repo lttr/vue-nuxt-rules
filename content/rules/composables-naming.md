@@ -4,10 +4,15 @@ Always prefix composable function names with "use" (e.g., `useMouse`, `useFetch`
 
 The naming convention improves code discoverability, makes it immediately clear which functions require the setup context, and aligns with community standards including VueUse and Nuxt composables.
 
+### File naming
+
+Name composable files using camelCase with the `use` prefix: `useFeatureName.ts`. Keep one composable per file to maintain clarity and discoverability.
+
 Example:
 
 ```typescript
 // Good - clear composable naming
+// file: useCounter.ts
 export function useCounter() {
   const count = ref(0)
   const increment = () => count.value++
@@ -26,7 +31,7 @@ export function getCounter() {
 ## Rule for AI agents
 
 ```
-ALWAYS prefix composable names with "use" (useMouse, useFetch)
+ALWAYS prefix composable names with "use" (useMouse, useFetch). Name files as useFeatureName.ts (camelCase). One composable per file.
 ```
 
 ## Eslint rule

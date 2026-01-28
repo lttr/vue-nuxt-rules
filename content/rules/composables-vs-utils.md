@@ -19,6 +19,9 @@ Composables should not:
 - Directly manipulate DOM elements
 - Handle CSS/styling logic
 - Contain template-specific code
+- Trigger UI side effects (toasts, modals, alerts)
+
+Instead of showing notifications or dialogs inside a composable, expose error and status state and let the component decide how to present it.
 
 Example:
 
@@ -40,7 +43,7 @@ function formatDate(date: Date): string {
 ## Rule for AI agents
 
 ```
-Only create composables when needing reactivity/lifecycle; pure functions -> utils. Composables handle state/logic, not DOM/CSS.
+Only create composables when needing reactivity/lifecycle; pure functions -> utils. Composables handle state/logic, not DOM/CSS/UI side effects. No toasts/modals inside composables — expose state, let components decide presentation.
 ```
 
 ## Eslint rule
