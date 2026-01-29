@@ -34,4 +34,6 @@
 - Don't extract to shared composables/ until a second consumer exists. Ladder: inline → colocated file → shared composables/.
 
 ## Styling
+
+- ALWAYS use <style scoped> for component styles
 ```

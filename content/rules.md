@@ -25,6 +25,11 @@
 - [Keyed v-for](/rules/keyed-v-for)
 - [Use of instead of in for v-for](/rules/use-of-instead-of-in-for-v-for)
 
+## Styles
+
+- [Overview](/rules/styles)
+- [Scoped styles](/rules/scoped-styles)
+
 ## Composables
 
 - [Overview](/rules/composables)

@@ -75,6 +75,14 @@ export default defineConfig({
         ],
       },
       {
+        text: "Styles",
+        collapsed: false,
+        items: [
+          { text: "Overview", link: "/rules/styles" },
+          { text: "Scoped styles", link: "/rules/scoped-styles" },
+        ],
+      },
+      {
         text: "Composables",
         collapsed: false,
         items: [
