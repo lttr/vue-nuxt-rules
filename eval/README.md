@@ -41,9 +41,9 @@ node run.mjs --skip-generation --results-dir results/2026-01-29T08-00-16
 Each `.yaml` in `evals/` defines one eval:
 
 ```yaml
-rule: prefer-definemodel.md      # rule file in content/rules/
-category: props                   # for filtering
-trials: 1                         # per-eval override
+rule: prefer-definemodel.md # rule file in content/rules/
+category: props # for filtering
+trials: 1 # per-eval override
 
 prompt: |
   Create a Vue 3 SFC component called RatingInput.
@@ -54,7 +54,7 @@ checks:
   - id: uses-definemodel
     type: regex
     pattern: "defineModel\\s*[<(]"
-    expect: present               # or "absent"
+    expect: present # or "absent"
   - id: overall-quality
     type: ai-judge
     criteria: |
@@ -71,10 +71,10 @@ Prompts describe **feature/UX requirements only** — never mention technical pa
 
 ### Check Types
 
-| Type | Description |
-|------|-------------|
-| `regex` | Tests pattern against generated code. `expect: present` (default) or `absent`. |
-| `ai-judge` | Sends code + criteria to an LLM, expects `PASS` or `FAIL` response. |
+| Type       | Description                                                                    |
+| ---------- | ------------------------------------------------------------------------------ |
+| `regex`    | Tests pattern against generated code. `expect: present` (default) or `absent`. |
+| `ai-judge` | Sends code + criteria to an LLM, expects `PASS` or `FAIL` response.            |
 
 ## Output
 
