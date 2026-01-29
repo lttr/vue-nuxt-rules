@@ -1,0 +1,23 @@
+rule: composables-async-patterns.md
+category: composables
+trials: 1
+
+prompt: |
+  Create a Vue 3 composable that fetches data from a given API URL.
+  It should provide the fetched data to the component, and the
+  component needs to show a loading spinner while fetching and an
+  error message if the request fails.
+
+checks:
+  - id: loading-ref
+    type: regex
+    pattern: "(isLoading|loading|pending)\\s*=\\s*ref"
+    expect: present
+  - id: error-ref
+    type: regex
+    pattern: "error\\s*=\\s*ref"
+    expect: present
+  - id: returns-state
+    type: regex
+    pattern: "return.*\\{[^}]*(loading|isLoading|pending)[^}]*error"
+    expect: present

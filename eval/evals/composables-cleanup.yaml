@@ -1,0 +1,18 @@
+rule: composables-cleanup.md
+category: composables
+trials: 1
+
+prompt: |
+  Create a Vue 3 composable that tracks the current window scroll
+  position (x and y). It should work correctly when the component
+  using it is destroyed.
+
+checks:
+  - id: has-cleanup
+    type: regex
+    pattern: "onUnmounted|onScopeDispose"
+    expect: present
+  - id: removes-listener
+    type: regex
+    pattern: "removeEventListener"
+    expect: present

@@ -1,0 +1,19 @@
+rule: template-on-the-top.md
+category: sfc-structure
+trials: 1
+
+prompt: |
+  Create a Vue 3 component called NotificationBell.
+  It displays a bell icon with a badge showing the number of unread
+  notifications. Clicking the bell toggles a dropdown list of
+  recent notifications. Use simple styles.
+
+checks:
+  - id: template-first
+    type: regex
+    pattern: "^\\s*<template>"
+    expect: present
+  - id: script-after-template
+    type: regex
+    pattern: "<template>[\\s\\S]*<script"
+    expect: present

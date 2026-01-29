@@ -1,0 +1,19 @@
+rule: prefer-ref-over-reactive.md
+category: props
+trials: 1
+
+prompt: |
+  Create a Vue 3 component called TodoList.
+  It manages a list of todo items (text, completed status), with
+  add, toggle, and delete functionality. Track the new todo input
+  text and a filter state (all/active/completed).
+
+checks:
+  - id: uses-ref
+    type: regex
+    pattern: "\\bref\\s*[<(]"
+    expect: present
+  - id: no-reactive
+    type: regex
+    pattern: "\\breactive\\s*[<(]"
+    expect: absent

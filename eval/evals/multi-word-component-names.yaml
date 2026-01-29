@@ -1,0 +1,16 @@
+rule: multi-word-component-names.md
+category: sfc-structure
+trials: 1
+
+prompt: |
+  Create a Vue 3 component for displaying a user's profile card.
+  It shows avatar, name, bio, and social links. The component should
+  be reusable across the app.
+
+checks:
+  - id: multi-word-name
+    type: ai-judge
+    criteria: |
+      Does the component use a multi-word name (like UserProfile, ProfileCard,
+      UserProfileCard) rather than a single word (like Profile, Card, User)?
+      Check the filename reference or component definition. PASS if multi-word, FAIL if single-word.

@@ -1,0 +1,18 @@
+rule: composables-organize-by-concern.md
+category: composables
+trials: 1
+
+prompt: |
+  Create a Vue 3 composable called useUserDashboard that manages:
+  user profile data with loading state, notification preferences
+  with a save method, and activity log with pagination.
+  It should have at least 6 state variables and 3 methods.
+
+checks:
+  - id: organized-by-concern
+    type: ai-judge
+    criteria: |
+      Is the code organized by logical concern (profile data + loading grouped
+      together, notification prefs + save grouped together, activity log +
+      pagination grouped together) rather than by API type (all refs together,
+      all functions together)? PASS if grouped by concern, FAIL if grouped by type.

@@ -1,0 +1,18 @@
+rule: define-emits-with-typescript.md
+category: props
+trials: 1
+
+prompt: |
+  Create a Vue 3 component called ConfirmDialog.
+  It shows a modal with title, message, and confirm/cancel buttons.
+  The parent needs to know when the user confirms or cancels.
+
+checks:
+  - id: typed-defineemits
+    type: regex
+    pattern: "defineEmits<"
+    expect: present
+  - id: no-array-emits
+    type: regex
+    pattern: "defineEmits\\(\\["
+    expect: absent

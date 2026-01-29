@@ -1,0 +1,21 @@
+rule: composables-return-refs.md
+category: composables
+trials: 1
+
+prompt: |
+  Create a Vue 3 composable that tracks mouse cursor position
+  on the page. Return the coordinates.
+
+checks:
+  - id: returns-plain-object
+    type: regex
+    pattern: "return\\s*\\{"
+    expect: present
+  - id: uses-ref-not-reactive
+    type: regex
+    pattern: "\\bref\\s*[<(]"
+    expect: present
+  - id: no-reactive-return
+    type: regex
+    pattern: "return\\s+state|return\\s+reactive"
+    expect: absent

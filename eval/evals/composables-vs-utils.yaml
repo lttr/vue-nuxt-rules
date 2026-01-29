@@ -1,0 +1,18 @@
+rule: composables-vs-utils.md
+category: composables
+trials: 1
+
+prompt: |
+  Create code for a Vue 3 app that needs: a function to format
+  currency values (e.g. 1234.5 → "$1,234.50"), a function to
+  format dates, and a feature that tracks whether the browser
+  window is focused.
+
+checks:
+  - id: util-functions
+    type: ai-judge
+    criteria: |
+      Are the pure formatting functions (currency, dates) written as plain
+      utility functions (not composables), while only the reactive window
+      focus tracking is a composable? PASS if properly separated, FAIL if
+      pure functions are wrapped as composables.

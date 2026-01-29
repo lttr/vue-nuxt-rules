@@ -1,0 +1,19 @@
+rule: composables-thin-composables.md
+category: composables
+trials: 1
+
+prompt: |
+  Create a Vue 3 composable that calculates shipping cost based on
+  weight (kg) and destination zone (domestic/international). The
+  calculation has business rules: domestic is $5 + $1/kg, international
+  is $15 + $3/kg, free over $100 order total. Accept inputs and
+  return the cost.
+
+checks:
+  - id: pure-function-extracted
+    type: ai-judge
+    criteria: |
+      Is the business logic (shipping cost calculation) extracted into a
+      pure function that's separate from the composable's reactive wrapper?
+      The composable should be thin, just wiring refs to the pure function.
+      PASS if separated, FAIL if business logic is inlined in computed/watch.

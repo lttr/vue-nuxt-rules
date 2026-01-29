@@ -1,0 +1,18 @@
+rule: keyed-v-for.md
+category: template-directives
+trials: 1
+
+prompt: |
+  Create a Vue 3 component called UserList.
+  It receives an array of users (each with id, name, email) and
+  renders them as a list of cards. Each card shows name and email.
+
+checks:
+  - id: has-key
+    type: regex
+    pattern: ":key="
+    expect: present
+  - id: key-uses-id
+    type: regex
+    pattern: ':key="[^"]*\\.id'
+    expect: present

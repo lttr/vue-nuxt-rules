@@ -1,0 +1,18 @@
+rule: prefer-definemodel.md
+category: props
+trials: 1
+
+prompt: |
+  Create a Vue 3 component called RatingInput.
+  It shows 5 star buttons. The parent component needs to read
+  and control the selected rating value (1-5).
+
+checks:
+  - id: uses-definemodel
+    type: regex
+    pattern: "defineModel\\s*[<(]"
+    expect: present
+  - id: no-manual-emit
+    type: regex
+    pattern: "emit\\(['\"]update:"
+    expect: absent

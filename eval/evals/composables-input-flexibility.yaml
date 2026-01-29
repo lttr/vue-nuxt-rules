@@ -1,0 +1,19 @@
+rule: composables-input-flexibility.md
+category: composables
+trials: 1
+
+prompt: |
+  Create a Vue 3 composable called useTitle that sets the document
+  title. It should accept the title from the caller, which might
+  pass a static string, a reactive value, or a function. Update
+  the document title when the input changes.
+
+checks:
+  - id: uses-tovalue
+    type: regex
+    pattern: "toValue|MaybeRef"
+    expect: present
+  - id: flexible-input
+    type: regex
+    pattern: "MaybeRef|MaybeRefOrGetter"
+    expect: present

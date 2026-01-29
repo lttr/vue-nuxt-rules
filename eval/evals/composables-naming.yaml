@@ -1,0 +1,17 @@
+rule: composables-naming.md
+category: composables
+trials: 1
+
+prompt: |
+  Create a Vue 3 composable that tracks whether the user is online
+  or offline. Return the status.
+
+checks:
+  - id: use-prefix
+    type: regex
+    pattern: "export\\s+(function|const)\\s+use[A-Z]"
+    expect: present
+  - id: returns-refs
+    type: regex
+    pattern: "return"
+    expect: present

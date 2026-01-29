@@ -1,0 +1,19 @@
+rule: use-of-instead-of-in-for-v-for.md
+category: template-directives
+trials: 1
+
+prompt: |
+  Create a Vue 3 component called ProductGrid.
+  It receives an array of products (id, name, price, imageUrl) and
+  displays them in a grid. Each product shows its image, name, and
+  formatted price.
+
+checks:
+  - id: uses-of
+    type: regex
+    pattern: 'v-for="[^"]*\bof\b'
+    expect: present
+  - id: no-in
+    type: regex
+    pattern: 'v-for="[^"]*\bin\b'
+    expect: absent

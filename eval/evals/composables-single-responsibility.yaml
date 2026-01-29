@@ -1,0 +1,20 @@
+rule: composables-single-responsibility.md
+category: composables
+trials: 1
+
+prompt: |
+  Create Vue 3 composables for a shopping cart feature. The feature
+  needs: managing cart items (add/remove), fetching cart data from
+  an API, calculating totals and discounts, and processing checkout.
+
+checks:
+  - id: multiple-composables
+    type: regex
+    pattern: "function\\s+use[A-Z]"
+    expect: present
+  - id: split-concerns
+    type: ai-judge
+    criteria: |
+      Are the composables split into focused, single-responsibility units
+      (e.g. separate composables for cart items, cart fetch, checkout)
+      rather than one monolithic useCart composable? PASS if split, FAIL if monolithic.

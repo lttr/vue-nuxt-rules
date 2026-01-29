@@ -1,0 +1,14 @@
+rule: scoped-styles.md
+category: styles
+trials: 1
+
+prompt: |
+  Create a Vue 3 component called AlertBanner.
+  It shows a colored banner with a message and a dismiss button.
+  Style it for warning (yellow) and error (red) variants.
+
+checks:
+  - id: has-scoped-styles
+    type: regex
+    pattern: "<style[^>]*scoped"
+    expect: present

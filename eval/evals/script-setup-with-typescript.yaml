@@ -1,0 +1,18 @@
+rule: script-setup-with-typescript.md
+category: sfc-structure
+trials: 1
+
+prompt: |
+  Create a Vue 3 component called CountdownTimer.
+  It takes a target date and shows days, hours, minutes, seconds
+  remaining. Updates every second.
+
+checks:
+  - id: script-setup-ts
+    type: regex
+    pattern: '<script\\s+setup\\s+lang="ts">'
+    expect: present
+  - id: no-options-api
+    type: regex
+    pattern: "export default"
+    expect: absent

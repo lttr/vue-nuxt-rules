@@ -1,0 +1,19 @@
+rule: same-name-prop-shorthand.md
+category: props
+trials: 1
+
+prompt: |
+  Create a Vue 3 component called UserProfile that uses a child
+  component called AvatarImage. Pass variables named userName,
+  avatarUrl, and isOnline to AvatarImage as props with the same
+  names.
+
+checks:
+  - id: uses-shorthand
+    type: regex
+    pattern: ":(userName|avatarUrl|isOnline)[^=]"
+    expect: present
+  - id: no-verbose
+    type: regex
+    pattern: ':(userName|avatarUrl|isOnline)="(userName|avatarUrl|isOnline)"'
+    expect: absent

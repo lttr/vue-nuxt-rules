@@ -1,0 +1,20 @@
+rule: group-script-by-logical-concerns.md
+category: sfc-structure
+trials: 1
+
+prompt: |
+  Create a Vue 3 component called ProductPage.
+  It has: a product title/description section, an image gallery
+  with thumbnail selection, an add-to-cart button with quantity
+  selector, and a reviews section that loads reviews from a URL.
+  The component should have at least 6 state variables and 3
+  derived values.
+
+checks:
+  - id: logical-grouping
+    type: ai-judge
+    criteria: |
+      Is the script code organized by logical concern (e.g. product data,
+      gallery logic, cart logic, reviews logic grouped together) rather than
+      by Vue API type (all refs together, all computed together, all functions together)?
+      PASS if grouped by concern, FAIL if grouped by API type.

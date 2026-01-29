@@ -1,0 +1,19 @@
+rule: define-props-with-typescript.md
+category: props
+trials: 1
+
+prompt: |
+  Create a Vue 3 component called DataTable.
+  It receives: an array of column definitions (key, label, sortable flag),
+  an array of row data objects, and an optional title string.
+  Render a table with sortable column headers.
+
+checks:
+  - id: typed-defineprops
+    type: regex
+    pattern: "defineProps<"
+    expect: present
+  - id: no-runtime-props
+    type: regex
+    pattern: "PropType"
+    expect: absent

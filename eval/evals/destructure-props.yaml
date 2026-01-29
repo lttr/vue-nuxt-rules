@@ -1,0 +1,19 @@
+rule: destructure-props.md
+category: props
+trials: 1
+
+prompt: |
+  Create a Vue 3 component called UserCard.
+  It receives a user's name, email, and an optional avatar URL
+  (default to a placeholder). The component uses the name in both
+  the template and a greeting message in the script.
+
+checks:
+  - id: destructured-defineprops
+    type: regex
+    pattern: "const\\s*\\{[^}]+\\}\\s*=\\s*defineProps"
+    expect: present
+  - id: no-withdefaults
+    type: regex
+    pattern: "withDefaults"
+    expect: absent

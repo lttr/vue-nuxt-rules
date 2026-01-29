@@ -1,0 +1,13 @@
+{
+  "name": "vue-nuxt-rules-eval",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "eval": "node run.mjs",
+    "eval:single": "node run.mjs --eval"
+  },
+  "dependencies": {
+    "yaml": "^2.7.0"
+  }
+}

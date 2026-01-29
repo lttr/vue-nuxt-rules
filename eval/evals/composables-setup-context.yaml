@@ -1,0 +1,16 @@
+rule: composables-setup-context.md
+category: composables
+trials: 1
+
+prompt: |
+  Create a Vue 3 component that uses a composable for tracking
+  mouse position and another composable for managing a list of items.
+  Show both in the template.
+
+checks:
+  - id: called-in-setup
+    type: ai-judge
+    criteria: |
+      Are all composable calls (use*) made directly at the top level of
+      <script setup> or setup(), not inside callbacks, promises, or after
+      await statements? PASS if all calls are in setup context, FAIL otherwise.
