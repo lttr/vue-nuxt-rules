@@ -187,9 +187,9 @@ function formatSetupMd(setup) {
   lines.push("```\n")
   if (setup.ruleContent) {
     lines.push("## Rule content\n")
-    lines.push("```markdown")
+    lines.push("````markdown")
     lines.push(setup.ruleContent)
-    lines.push("```\n")
+    lines.push("````\n")
   }
   return lines.join("\n")
 }
