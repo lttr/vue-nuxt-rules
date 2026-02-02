@@ -7,57 +7,6 @@ import { extractRule, getRulePath } from "./extract-rule.mjs"
 import { evaluate } from "./evaluator.mjs"
 
 /**
- * Strip markdown fences from generated output if present.
- */
-function stripFences(code) {
-  return code.replace(/^```[^\n]*\n?/, "").replace(/\n?```\s*$/, "")
-}
-
-/**
- * Parse raw LLM output into a map of filename → content.
- * Supports multi-file output delimited by: // --- file: <path> ---
- */
-function parseMultiFile(rawOutput) {
-  const delimiter = /^\/\/ --- file: (.+) ---$/gm
-  const files = {}
-  let match
-  const splits = []
-
-  while ((match = delimiter.exec(rawOutput)) !== null) {
-    splits.push({
-      name: match[1].trim(),
-      index: match.index,
-      end: delimiter.lastIndex,
-    })
-  }
-
-  if (splits.length === 0) {
-    // Single file — infer extension
-    const ext = /<template>|<script/.test(rawOutput) ? ".vue" : ".ts"
-    return { [`output${ext}`]: rawOutput }
-  }
-
-  for (let i = 0; i < splits.length; i++) {
-    const contentStart = splits[i].end + 1 // skip newline after delimiter
-    const contentEnd =
-      i + 1 < splits.length ? splits[i + 1].index : rawOutput.length
-    files[splits[i].name] = rawOutput.slice(contentStart, contentEnd).trim()
-  }
-
-  return files
-}
-
-/**
- * Build system prompt for code generation (format-only, no rule text).
- */
-function buildSystemPrompt() {
-  return `You are a Vue 3 / Nuxt expert.
-If your response contains multiple files, separate them with a delimiter line:
-// --- file: <relative-path> ---
-Respond ONLY with code. No explanations, no markdown fences.`
-}
-
-/**
  * Create an isolated temp environment for running claude.
  * Copies credentials so claude can authenticate, and optionally
  * places a rule file into .claude/rules/ in the workspace.
@@ -166,7 +115,6 @@ async function readWorkspaceFiles(dir) {
 async function generate(prompt, ruleFile, opts) {
   const model = opts.model || "claude-opus-4-5-20251101"
   const ruleMode = opts.ruleMode || "full"
-  const systemPrompt = buildSystemPrompt()
 
   const isolated = await createIsolatedEnv(
     ruleFile || undefined,
@@ -186,7 +134,6 @@ async function generate(prompt, ruleFile, opts) {
 
   const setup = {
     model,
-    systemPrompt,
     prompt,
     allowedTools,
     ruleFile: ruleFile || null,
@@ -198,8 +145,6 @@ async function generate(prompt, ruleFile, opts) {
     const args = [
       "-p",
       prompt,
-      "--system-prompt",
-      systemPrompt,
       "--model",
       model,
       "--output-format",
@@ -208,46 +153,26 @@ async function generate(prompt, ruleFile, opts) {
       ...allowedTools,
     ]
 
-    const stdout = await spawnClaude(args, {
+    await spawnClaude(args, {
       env: { HOME: isolated.home },
       cwd: isolated.workspace,
     })
 
-    // Prefer workspace files (from Write tool) over stdout
+    // Read files Claude wrote to the workspace
     const wsFiles = await readWorkspaceFiles(isolated.workspace)
     if (Object.keys(wsFiles).length > 0) {
       return { code: wsFiles, setup }
     }
 
-    // Fall back to stdout parsing
-    const trimmed = stdout.trim()
-    if (trimmed) {
-      return { code: parseMultiFile(stripFences(trimmed)), setup }
-    }
-
     // Nothing produced
-    return { code: { "output.ts": "" }, setup }
+    return { code: {}, setup }
   } finally {
     await isolated.cleanup()
   }
 }
 
 /**
- * Format check results as markdown.
- */
-function formatChecksMd(checks) {
-  const lines = ["# Checks\n"]
-  lines.push("| Check | Result | Detail |")
-  lines.push("|-------|--------|--------|")
-  for (const c of checks) {
-    lines.push(`| ${c.id} | ${c.passed ? "✅ pass" : "❌ fail"} | ${c.detail} |`)
-  }
-  lines.push("")
-  return lines.join("\n")
-}
-
-/**
- * Format setup context as markdown.
+ * Format setup context as markdown (rule-level, covers both variants).
  */
 function formatSetupMd(setup) {
   const lines = ["# Setup\n"]
@@ -256,17 +181,13 @@ function formatSetupMd(setup) {
   lines.push(`- **Rule mode**: ${setup.ruleMode || "n/a"}`)
   lines.push(`- **Allowed tools**: ${setup.allowedTools.join(", ")}`)
   lines.push("")
-  lines.push("## System prompt\n")
-  lines.push("```")
-  lines.push(setup.systemPrompt)
-  lines.push("```\n")
   lines.push("## Prompt\n")
   lines.push("```")
   lines.push(setup.prompt)
   lines.push("```\n")
   if (setup.ruleContent) {
     lines.push("## Rule content\n")
-    lines.push("```")
+    lines.push("```markdown")
     lines.push(setup.ruleContent)
     lines.push("```\n")
   }
@@ -385,6 +306,13 @@ export async function saveResults(evalResult, resultsDir) {
   const dir = join(resultsDir, slug)
   await mkdir(dir, { recursive: true })
 
+  // Save setup once at rule level (from first trial's with-rule variant, has rule content)
+  const firstTrial = evalResult.trials[0]
+  const setup = firstTrial?.withRule?.setup
+  if (setup) {
+    await writeFile(join(dir, "setup.md"), formatSetupMd(setup))
+  }
+
   for (const trial of evalResult.trials) {
     const i = trial.index
     for (const [variant, variantName] of [
@@ -404,24 +332,6 @@ export async function saveResults(evalResult, resultsDir) {
           await mkdir(dirname(filePath), { recursive: true })
           await writeFile(filePath, content)
         }
-      }
-
-      // Save evaluation check results as markdown
-      const checks = trial[variant].checks
-      if (checks) {
-        await writeFile(
-          join(variantDir, "checks.md"),
-          formatChecksMd(checks),
-        )
-      }
-
-      // Save Claude Code setup context as markdown
-      const setup = trial[variant].setup
-      if (setup) {
-        await writeFile(
-          join(variantDir, "setup.md"),
-          formatSetupMd(setup),
-        )
       }
     }
   }

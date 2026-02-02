@@ -42,7 +42,7 @@ function fractionStr(trials, variant) {
 }
 
 /**
- * Generate markdown + JSON reports.
+ * Generate markdown report.
  */
 export async function generateReport(allResults, resultsDir) {
   const summary = allResults.map((r) => ({
@@ -114,6 +114,27 @@ function buildMarkdown(summary, allResults) {
         lines.push(
           `| ${b.id} | ${b.passed ? "✅" : "❌"} ${b.detail} | ${r.passed ? "✅" : "❌"} ${r.detail} |`,
         )
+      }
+
+      // Summarize differences
+      const improved = []
+      const regressed = []
+      for (let i = 0; i < baseChecks.length; i++) {
+        const b = baseChecks[i]
+        const r = ruleChecks[i]
+        if (!b.passed && r.passed) improved.push(b.id)
+        if (b.passed && !r.passed) regressed.push(b.id)
+      }
+      lines.push("")
+      if (improved.length > 0 || regressed.length > 0) {
+        if (improved.length > 0)
+          lines.push(`🟢 **Improved**: ${improved.join(", ")}`)
+        if (regressed.length > 0)
+          lines.push(`🔴 **Regressed**: ${regressed.join(", ")}`)
+      } else if (baseChecks.every((c) => c.passed) && ruleChecks.every((c) => c.passed)) {
+        lines.push(`⚪ **No difference** — both passed all checks`)
+      } else {
+        lines.push(`⚪ **No difference** — both failed the same checks`)
       }
       lines.push("")
     }
