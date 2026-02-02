@@ -86,3 +86,4 @@ for (const s of summary) {
 }
 
 console.log(`\nReport: ${RESULTS_DIR}/report.md`)
+console.log(`Recommended rules: ${RESULTS_DIR}/recommended-rules.md`)

@@ -1,5 +1,6 @@
-import { writeFile } from "node:fs/promises"
+import { readFile, writeFile } from "node:fs/promises"
 import { join } from "node:path"
+import { extractRule, getRulePath } from "./extract-rule.mjs"
 
 /**
  * Classify a rule based on 3-variant eval results.
@@ -71,6 +72,15 @@ export async function generateReport(allResults, resultsDir) {
   const md = buildMarkdown(summary, allResults)
   await writeFile(join(resultsDir, "report.md"), md)
 
+  // Recommended rules document
+  const recommended = summary.filter(
+    (s) => s.classification !== "already-known" && s.classification !== "no-improvement",
+  )
+  if (recommended.length > 0) {
+    const rulesDoc = await buildRecommendedRules(recommended)
+    await writeFile(join(resultsDir, "recommended-rules.md"), rulesDoc)
+  }
+
   return { summary, markdown: md }
 }
 
@@ -114,6 +124,20 @@ function buildMarkdown(summary, allResults) {
   }
 
   lines.push("")
+
+  // Recommendations
+  const recommended = summary.filter(
+    (s) => s.classification !== "already-known" && s.classification !== "no-improvement",
+  )
+  if (recommended.length > 0) {
+    lines.push("## Recommendations\n")
+    for (const s of recommended) {
+      const variant =
+        s.classification === "full-better" ? "full" : "extracted"
+      lines.push(`- **${s.rule}** → use **${variant}**`)
+    }
+    lines.push("")
+  }
 
   // Detailed breakdown
   lines.push("## Details\n")
@@ -171,6 +195,36 @@ function buildMarkdown(summary, allResults) {
         lines.push(`⚪ **No difference** — all passed`)
       } else {
         lines.push(`⚪ **No difference** — all failed the same checks`)
+      }
+      lines.push("")
+    }
+  }
+
+  return lines.join("\n")
+}
+
+async function buildRecommendedRules(recommended) {
+  const lines = ["# Recommended Rules\n"]
+
+  // Group by category
+  const byCategory = new Map()
+  for (const s of recommended) {
+    if (!byCategory.has(s.category)) byCategory.set(s.category, [])
+    byCategory.get(s.category).push(s)
+  }
+
+  for (const [category, rules] of byCategory) {
+    lines.push(`## ${category}\n`)
+    for (const s of rules) {
+      lines.push(`### ${s.rule}\n`)
+      const useExtracted = s.classification !== "full-better"
+      if (useExtracted) {
+        const text = await extractRule(s.rule)
+        lines.push(text)
+      } else {
+        const fullPath = getRulePath(s.rule)
+        const content = await readFile(fullPath, "utf-8")
+        lines.push(content)
       }
       lines.push("")
     }
