@@ -61,10 +61,6 @@ export async function generateReport(allResults, resultsDir) {
   const md = buildMarkdown(summary, allResults)
   await writeFile(join(resultsDir, "report.md"), md)
 
-  // JSON report
-  const json = JSON.stringify({ summary, details: allResults }, null, 2)
-  await writeFile(join(resultsDir, "report.json"), json)
-
   return { summary, markdown: md }
 }
 

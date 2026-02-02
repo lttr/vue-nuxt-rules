@@ -133,10 +133,38 @@ function spawnClaude(args, { timeout = 180_000, env, cwd } = {}) {
 }
 
 /**
+ * Recursively read all files from a directory into a filename → content map.
+ * Skips hidden directories (.claude, etc).
+ */
+async function readWorkspaceFiles(dir) {
+  const files = {}
+  let entries
+  try {
+    entries = await readdir(dir, { withFileTypes: true })
+  } catch {
+    return files
+  }
+  for (const entry of entries) {
+    if (entry.name.startsWith(".")) continue
+    const fullPath = join(dir, entry.name)
+    if (entry.isDirectory()) {
+      const nested = await readWorkspaceFiles(fullPath)
+      for (const [name, content] of Object.entries(nested)) {
+        files[join(entry.name, name)] = content
+      }
+    } else {
+      files[entry.name] = await readFile(fullPath, "utf-8")
+    }
+  }
+  return files
+}
+
+/**
  * Run claude generation in an isolated environment.
+ * Returns { code, setup } where setup captures the Claude Code config used.
  */
 async function generate(prompt, ruleFile, opts) {
-  const model = opts.model || "claude-opus-4-20250514"
+  const model = opts.model || "claude-opus-4-5-20251101"
   const ruleMode = opts.ruleMode || "full"
   const systemPrompt = buildSystemPrompt()
 
@@ -144,6 +172,27 @@ async function generate(prompt, ruleFile, opts) {
     ruleFile || undefined,
     ruleFile ? ruleMode : undefined,
   )
+
+  // Capture the rule content that was placed in workspace
+  let ruleContent = null
+  if (ruleFile) {
+    const rulesDir = join(isolated.workspace, ".claude", "rules")
+    try {
+      ruleContent = await readFile(join(rulesDir, ruleFile), "utf-8")
+    } catch {}
+  }
+
+  const allowedTools = ["Bash(*)", "Read", "Write", "Edit"]
+
+  const setup = {
+    model,
+    systemPrompt,
+    prompt,
+    allowedTools,
+    ruleFile: ruleFile || null,
+    ruleMode: ruleFile ? ruleMode : null,
+    ruleContent,
+  }
 
   try {
     const args = [
@@ -156,20 +205,72 @@ async function generate(prompt, ruleFile, opts) {
       "--output-format",
       "text",
       "--allowedTools",
-      'Bash(*)',
-      "Read",
-      "Write",
-      "Edit",
+      ...allowedTools,
     ]
 
     const stdout = await spawnClaude(args, {
       env: { HOME: isolated.home },
       cwd: isolated.workspace,
     })
-    return parseMultiFile(stripFences(stdout.trim()))
+
+    // Prefer workspace files (from Write tool) over stdout
+    const wsFiles = await readWorkspaceFiles(isolated.workspace)
+    if (Object.keys(wsFiles).length > 0) {
+      return { code: wsFiles, setup }
+    }
+
+    // Fall back to stdout parsing
+    const trimmed = stdout.trim()
+    if (trimmed) {
+      return { code: parseMultiFile(stripFences(trimmed)), setup }
+    }
+
+    // Nothing produced
+    return { code: { "output.ts": "" }, setup }
   } finally {
     await isolated.cleanup()
   }
+}
+
+/**
+ * Format check results as markdown.
+ */
+function formatChecksMd(checks) {
+  const lines = ["# Checks\n"]
+  lines.push("| Check | Result | Detail |")
+  lines.push("|-------|--------|--------|")
+  for (const c of checks) {
+    lines.push(`| ${c.id} | ${c.passed ? "✅ pass" : "❌ fail"} | ${c.detail} |`)
+  }
+  lines.push("")
+  return lines.join("\n")
+}
+
+/**
+ * Format setup context as markdown.
+ */
+function formatSetupMd(setup) {
+  const lines = ["# Setup\n"]
+  lines.push(`- **Model**: ${setup.model}`)
+  lines.push(`- **Rule file**: ${setup.ruleFile || "none"}`)
+  lines.push(`- **Rule mode**: ${setup.ruleMode || "n/a"}`)
+  lines.push(`- **Allowed tools**: ${setup.allowedTools.join(", ")}`)
+  lines.push("")
+  lines.push("## System prompt\n")
+  lines.push("```")
+  lines.push(setup.systemPrompt)
+  lines.push("```\n")
+  lines.push("## Prompt\n")
+  lines.push("```")
+  lines.push(setup.prompt)
+  lines.push("```\n")
+  if (setup.ruleContent) {
+    lines.push("## Rule content\n")
+    lines.push("```")
+    lines.push(setup.ruleContent)
+    lines.push("```\n")
+  }
+  return lines.join("\n")
 }
 
 /**
@@ -189,10 +290,14 @@ export async function runEval(evalDef, opts = {}) {
 
     if (!opts.skipGeneration) {
       // Generate baseline (no rule)
-      trial.baseline.code = await generate(evalDef.prompt, null, opts)
+      const baselineResult = await generate(evalDef.prompt, null, opts)
+      trial.baseline.code = baselineResult.code
+      trial.baseline.setup = baselineResult.setup
 
       // Generate with rule
-      trial.withRule.code = await generate(evalDef.prompt, evalDef.rule, opts)
+      const withRuleResult = await generate(evalDef.prompt, evalDef.rule, opts)
+      trial.withRule.code = withRuleResult.code
+      trial.withRule.setup = withRuleResult.setup
     } else {
       // Load from results dir (supports both old single-file and new directory format)
       const dir = opts.resultsDir
@@ -226,13 +331,13 @@ export async function runEval(evalDef, opts = {}) {
 async function loadVariant(resultsDir, slug, variantName) {
   const variantDir = join(resultsDir, slug, variantName)
 
-  // Try new directory format first
+  // Try output/ subfolder first (current format)
+  const outputDir = join(variantDir, "output")
   try {
     const files = {}
-    const entries = await readdir(variantDir, { recursive: true })
+    const entries = await readdir(outputDir, { recursive: true })
     for (const entry of entries) {
-      const fullPath = join(variantDir, entry)
-      // readdir with recursive returns strings; skip directories by trying to read
+      const fullPath = join(outputDir, entry)
       try {
         files[entry] = await readFile(fullPath, "utf-8")
       } catch {
@@ -241,7 +346,26 @@ async function loadVariant(resultsDir, slug, variantName) {
     }
     if (Object.keys(files).length > 0) return files
   } catch {
-    // directory doesn't exist, try legacy format
+    // output/ doesn't exist, try legacy formats
+  }
+
+  // Legacy: files directly in variant dir (skip metadata files)
+  const metaFiles = new Set(["checks.json", "setup.json", "checks.md", "setup.md"])
+  try {
+    const files = {}
+    const entries = await readdir(variantDir, { recursive: true })
+    for (const entry of entries) {
+      if (metaFiles.has(entry)) continue
+      const fullPath = join(variantDir, entry)
+      try {
+        files[entry] = await readFile(fullPath, "utf-8")
+      } catch {
+        // directory entry, skip
+      }
+    }
+    if (Object.keys(files).length > 0) return files
+  } catch {
+    // directory doesn't exist
   }
 
   // Legacy single-file format
@@ -267,14 +391,37 @@ export async function saveResults(evalResult, resultsDir) {
       ["baseline", `trial-${i}-baseline`],
       ["withRule", `trial-${i}-with-rule`],
     ]) {
-      const codeMap = trial[variant].code
-      if (!codeMap || Object.keys(codeMap).length === 0) continue
-
       const variantDir = join(dir, variantName)
-      for (const [filename, content] of Object.entries(codeMap)) {
-        const filePath = join(variantDir, filename)
-        await mkdir(dirname(filePath), { recursive: true })
-        await writeFile(filePath, content)
+      await mkdir(variantDir, { recursive: true })
+
+      // Save generated code files into output/ subfolder
+      const codeMap = trial[variant].code
+      if (codeMap && Object.keys(codeMap).length > 0) {
+        const outputDir = join(variantDir, "output")
+        await mkdir(outputDir, { recursive: true })
+        for (const [filename, content] of Object.entries(codeMap)) {
+          const filePath = join(outputDir, filename)
+          await mkdir(dirname(filePath), { recursive: true })
+          await writeFile(filePath, content)
+        }
+      }
+
+      // Save evaluation check results as markdown
+      const checks = trial[variant].checks
+      if (checks) {
+        await writeFile(
+          join(variantDir, "checks.md"),
+          formatChecksMd(checks),
+        )
+      }
+
+      // Save Claude Code setup context as markdown
+      const setup = trial[variant].setup
+      if (setup) {
+        await writeFile(
+          join(variantDir, "setup.md"),
+          formatSetupMd(setup),
+        )
       }
     }
   }

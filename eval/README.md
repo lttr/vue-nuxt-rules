@@ -29,7 +29,7 @@ node run.mjs --category composables
 # Override trial count (default: 1)
 node run.mjs --trials 3
 
-# Pin model (default: claude-opus-4-20250514)
+# Pin model (default: claude-opus-4-5-20251101)
 node run.mjs --model claude-sonnet-4-20250514
 
 # Use only the "Rule for AI agents" block instead of full .md
@@ -95,10 +95,15 @@ Results are written to `results/<timestamp>/`:
 ```
 results/2026-01-29T08-00-16/
   report.md                       # markdown summary + detailed breakdown
-  report.json                     # machine-readable full results
   prefer-definemodel/
-    trial-0-baseline.vue          # generated code without rule
-    trial-0-with-rule.vue         # generated code with rule
+    trial-0-baseline/
+      output.vue                  # generated code
+      setup.md                    # model, prompt, system prompt, rule content
+      checks.md                   # evaluation check results
+    trial-0-with-rule/
+      output.vue
+      setup.md
+      checks.md
   ...
 ```
 
