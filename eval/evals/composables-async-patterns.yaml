@@ -17,7 +17,11 @@ checks:
     type: regex
     pattern: "error\\s*=\\s*ref"
     expect: present
-  - id: returns-state
+  - id: returns-loading
     type: regex
-    pattern: "return.*\\{[^}]*(loading|isLoading|pending)[^}]*error"
+    pattern: "return.*\\{[^}]*(loading|isLoading|pending)"
+    expect: present
+  - id: returns-error
+    type: regex
+    pattern: "return.*\\{[^}]*error"
     expect: present

@@ -10,7 +10,7 @@ prompt: |
 checks:
   - id: script-setup-ts
     type: regex
-    pattern: '<script\\s+setup\\s+lang="ts">'
+    pattern: '<script\s+setup\s+lang="ts">'
     expect: present
   - id: no-options-api
     type: regex

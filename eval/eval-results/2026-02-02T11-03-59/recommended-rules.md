@@ -64,6 +64,20 @@ No ESLint rule available
 
 - PREFER VueUse composables over custom implementations for common browser/DOM/state tasks
 
+## sfc-structure
+
+### multi-word-component-names.md
+
+- ALWAYS use multi-word component names except for Nuxt pages and layouts
+
+### group-script-by-logical-concerns.md
+
+- PREFER to group by logical concerns rather than grouping by type (data, methods, computed) within components
+
+### script-setup-with-typescript.md
+
+- ALWAYS use `<script setup lang="ts">` for component's script section
+
 ## props
 
 ### define-emits-with-typescript.md
@@ -85,16 +99,6 @@ No ESLint rule available
 ### same-name-prop-shorthand.md
 
 - ALWAYS use same-name shorthand `:propName` instead of `:propName="propName"`
-
-## sfc-structure
-
-### group-script-by-logical-concerns.md
-
-- PREFER to group by logical concerns rather than grouping by type (data, methods, computed) within components
-
-### multi-word-component-names.md
-
-- ALWAYS use multi-word component names except for Nuxt pages and layouts
 
 ## template-directives
 

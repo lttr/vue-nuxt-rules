@@ -14,5 +14,5 @@ checks:
     expect: present
   - id: key-uses-id
     type: regex
-    pattern: ':key="[^"]*\\.id'
+    pattern: ':key="[^"]*\.id'
     expect: present

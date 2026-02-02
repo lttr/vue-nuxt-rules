@@ -2,38 +2,38 @@
 
 ## Summary
 
-- **Already Known**: 11
+- **Already Known**: 13
 - **Full Better**: 1
-- **Extracted Better**: 0
+- **Extracted Better**: 1
 - **Both Help**: 10
-- **No Improvement**: 3
+- **No Improvement**: 0
 
 ## Results
 
 | Rule | Category | Classification | Baseline | Full | Extracted |
 |------|----------|---------------|----------|------|-----------|
 | composables-thin-composables.md | composables | 🟢 full-better | 0/3 | 3/3 | 2/3 |
+| multi-word-component-names.md | sfc-structure | 🔵 extracted-better | 1/3 | 2/3 | 3/3 |
 | composables-vs-utils.md | composables | 🟡 both-help | 0/3 | 3/3 | 3/3 |
 | define-emits-with-typescript.md | props | 🟡 both-help | 0/6 | 6/6 | 6/6 |
 | define-props-with-typescript.md | props | 🟡 both-help | 3/6 | 6/6 | 6/6 |
 | destructure-props.md | props | 🟡 both-help | 3/6 | 6/6 | 6/6 |
 | group-script-by-logical-concerns.md | sfc-structure | 🟡 both-help | 0/3 | 3/3 | 3/3 |
-| multi-word-component-names.md | sfc-structure | 🟡 both-help | 2/3 | 3/3 | 3/3 |
 | prefer-definemodel.md | props | 🟡 both-help | 4/6 | 6/6 | 6/6 |
 | prefer-vueuse.md | composables | 🟡 both-help | 0/6 | 6/6 | 6/6 |
 | same-name-prop-shorthand.md | props | 🟡 both-help | 0/6 | 6/6 | 6/6 |
+| script-setup-with-typescript.md | sfc-structure | 🟡 both-help | 3/6 | 6/6 | 6/6 |
 | use-of-instead-of-in-for-v-for.md | template-directives | 🟡 both-help | 0/6 | 6/6 | 6/6 |
-| composables-async-patterns.md | composables | 🔴 no-improvement | 6/9 | 6/9 | 6/9 |
-| keyed-v-for.md | template-directives | 🔴 no-improvement | 3/6 | 3/6 | 3/6 |
-| script-setup-with-typescript.md | sfc-structure | 🔴 no-improvement | 3/6 | 3/6 | 3/6 |
+| composables-async-patterns.md | composables | ⚪ already-known | 12/12 | 12/12 | 12/12 |
 | composables-cleanup.md | composables | ⚪ already-known | 6/6 | 6/6 | 6/6 |
 | composables-input-flexibility.md | composables | ⚪ already-known | 6/6 | 6/6 | 6/6 |
 | composables-naming.md | composables | ⚪ already-known | 6/6 | 6/6 | 6/6 |
-| composables-organize-by-concern.md | composables | ⚪ already-known | 3/3 | 3/3 | 1/3 |
+| composables-organize-by-concern.md | composables | ⚪ already-known | 3/3 | 3/3 | 2/3 |
 | composables-progressive-extraction.md | composables | ⚪ already-known | 3/3 | 3/3 | 3/3 |
 | composables-return-refs.md | composables | ⚪ already-known | 9/9 | 9/9 | 9/9 |
 | composables-setup-context.md | composables | ⚪ already-known | 3/3 | 3/3 | 3/3 |
 | composables-single-responsibility.md | composables | ⚪ already-known | 6/6 | 6/6 | 6/6 |
+| keyed-v-for.md | template-directives | ⚪ already-known | 6/6 | 6/6 | 6/6 |
 | prefer-ref-over-reactive.md | props | ⚪ already-known | 6/6 | 6/6 | 6/6 |
 | scoped-styles.md | styles | ⚪ already-known | 3/3 | 3/3 | 3/3 |
 | template-on-the-top.md | sfc-structure | ⚪ already-known | 6/6 | 6/6 | 6/6 |
@@ -41,15 +41,16 @@
 ## Recommendations
 
 - **composables-thin-composables.md** → use **full**
+- **multi-word-component-names.md** → use **extracted**
 - **composables-vs-utils.md** → use **extracted**
 - **define-emits-with-typescript.md** → use **extracted**
 - **define-props-with-typescript.md** → use **extracted**
 - **destructure-props.md** → use **extracted**
 - **group-script-by-logical-concerns.md** → use **extracted**
-- **multi-word-component-names.md** → use **extracted**
 - **prefer-definemodel.md** → use **extracted**
 - **prefer-vueuse.md** → use **extracted**
 - **same-name-prop-shorthand.md** → use **extracted**
+- **script-setup-with-typescript.md** → use **extracted**
 - **use-of-instead-of-in-for-v-for.md** → use **extracted**
 
 ## Details
@@ -62,9 +63,10 @@
 |-------|----------|------|-----------|
 | loading-ref | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
 | error-ref | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
-| returns-state | ❌ pattern not found, expected present | ❌ pattern not found, expected present | ❌ pattern not found, expected present |
+| returns-loading | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
+| returns-error | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
 
-⚪ **No difference** — all failed the same checks
+⚪ **No difference** — all passed
 
 **Trial 1**
 
@@ -72,9 +74,10 @@
 |-------|----------|------|-----------|
 | loading-ref | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
 | error-ref | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
-| returns-state | ❌ pattern not found, expected present | ❌ pattern not found, expected present | ❌ pattern not found, expected present |
+| returns-loading | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
+| returns-error | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
 
-⚪ **No difference** — all failed the same checks
+⚪ **No difference** — all passed
 
 **Trial 2**
 
@@ -82,9 +85,10 @@
 |-------|----------|------|-----------|
 | loading-ref | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
 | error-ref | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
-| returns-state | ❌ pattern not found, expected present | ❌ pattern not found, expected present | ❌ pattern not found, expected present |
+| returns-loading | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
+| returns-error | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
 
-⚪ **No difference** — all failed the same checks
+⚪ **No difference** — all passed
 
 ### composables-cleanup.md
 
@@ -179,7 +183,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| organized-by-concern | ✅ PASS - Code is grouped by logical concern: profile state/methods together, notification preferences together, activity log/pagination together, rather than grouping all refs or all functions separately. | ✅ PASS - Code is clearly organized by logical concerns with each section (profile, notifications, activity log) keeping related state and functions grouped together rather than separating by API type. | ✅ PASS - Code is organized by logical concern with clear sections: state, metadata (computed values), and methods, with related functionality grouped together (profile data + loading, notifications + preferences, activity + pagination). |
+| organized-by-concern | ✅ PASS - Code groups profile (data + loading + error), notification preferences (data + saving), and activity log (data + pagination + loading) by logical concern rather than grouping all refs/reactives/functions together. | ✅ PASS - Code is clearly organized by logical concerns with explicit comments separating profile, notifications, and activity sections, grouping related state and functions together. | ✅ PASS - Code is well-organized by logical concerns with clear sections for profile data management, notifications handling, and activity log with pagination, rather than grouping all refs or functions together. |
 
 ⚪ **No difference** — all passed
 
@@ -187,7 +191,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| organized-by-concern | ✅ PASS - Code is well-organized by logical concern with state, computed, and methods for each feature (profile, notifications, activity) grouped together, and clear section comments separating concerns. | ✅ PASS - Code is clearly organized by logical concerns with comments separating user profile, notification preferences, and activity log sections, keeping related state and functions grouped together. | ❌ FAIL - Code is grouped by API type (state section, computed section, methods section) rather than logical concern (profile data + loading + methods together, notifications + preferences + save together, etc.) |
+| organized-by-concern | ✅ PASS - Code is organized by logical concern with profile, notification preferences, and activity log sections each grouping related state, computed properties, and methods together. | ✅ PASS - Code is clearly organized by logical concerns with comments separating user profile, notification preferences, and activity log sections, keeping related state and functions grouped together. | ❌ FAIL - Code is grouped by API type (all state refs together, all computed together, all methods together) rather than by logical concern (profile data + loading + fetch together, notifications + save together, activity + pagination together). |
 
 🔴 **Extracted regressed**: organized-by-concern
 
@@ -195,9 +199,9 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| organized-by-concern | ✅ PASS - Code groups related state and methods by logical concern (profile data + loading/error, notifications + saving, activity + pagination) with clear section comments, rather than grouping all refs together or all functions together. | ✅ PASS - Code is clearly organized by logical concerns with comments separating user profile, notification preferences, and activity log sections, each grouping related state and functions together. | ❌ FAIL - Code is grouped by API type (all refs together, computed together, functions together) rather than by logical concern (profile data + loading + fetch method grouped together). |
+| organized-by-concern | ✅ PASS - Code groups related state and functionality by logical concern (profile, notifications, activity) with clear section comments, rather than grouping by API type. | ✅ PASS - Code is clearly organized by logical concerns with profile, notifications, and activity sections each containing related state and functions together. | ✅ PASS - Code is organized by logical concern with clear sections (State, Metadata, Methods) and related functionality grouped together (profile with loading state, notifications with preferences, activity with pagination). |
 
-🔴 **Extracted regressed**: organized-by-concern
+⚪ **No difference** — all passed
 
 ### composables-progressive-extraction.md
 
@@ -205,7 +209,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| inline-or-colocated | ✅ PASS - Search logic is kept inline within the component's script setup section, not extracted to shared composables. | ✅ PASS - Search logic is inline within the component's script setup block, not extracted to a shared composables directory. | ✅ PASS - Search logic is inline in script setup block, properly colocated with the component rather than prematurely extracted to composables. |
+| inline-or-colocated | ✅ PASS - Search logic is kept inline within the component's script setup block, not extracted to composables. | ✅ PASS - Search logic is kept inline within the component's script setup block, not extracted to a shared composables directory. | ✅ PASS - Search logic is kept inline within the component's script setup block, not extracted to a shared composables directory. |
 
 ⚪ **No difference** — all passed
 
@@ -213,7 +217,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| inline-or-colocated | ✅ PASS - search logic is kept inline within the component's script setup block, not extracted to shared composables. | ✅ PASS - Search logic is kept inline within the component's script setup block, not extracted to a shared composables directory. | ✅ PASS - Search logic is kept inline within the component's script setup block, not extracted to a shared composables directory. |
+| inline-or-colocated | ✅ PASS - Search logic is inline in script setup, not extracted to shared composables directory. | ✅ PASS - Search logic is kept inline within the component's script setup rather than being extracted to a shared composable. | ✅ PASS - Search logic is kept inline within the component's script setup block, not extracted to composables. |
 
 ⚪ **No difference** — all passed
 
@@ -221,7 +225,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| inline-or-colocated | ✅ PASS - Search logic is properly kept inline in the component's script setup, avoiding premature extraction to composables. | ✅ PASS - Search logic is kept inline within the component's script setup, not extracted to a shared composables directory. | ✅ PASS - Search logic is kept inline within the component's script setup block, not extracted to a shared composables directory. |
+| inline-or-colocated | ✅ PASS - Search logic is inline in the component's script setup, not extracted to shared composables. | ✅ PASS - Search logic is kept inline within the component's script setup section, not extracted to a shared composables directory. | ✅ PASS - Search logic is kept inline within the component's script setup block, not extracted to shared composables. |
 
 ⚪ **No difference** — all passed
 
@@ -263,7 +267,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| called-in-setup | ✅ PASS - All composable calls (useMousePosition, useItemList) are made directly at the top level of <script setup> before any other logic. | ✅ PASS - All composable calls (useMouse, useItemList) are made synchronously at the top level of <script setup>, not inside callbacks or after await statements. | ✅ PASS - All composable calls (useMousePosition, useItemList) are made directly at the top level of <script setup>, not inside callbacks or after await statements. |
+| called-in-setup | ✅ PASS - All composable calls (useMousePosition, useItemList) are at top level of <script setup>, not inside callbacks or async contexts. | ✅ PASS - All composable calls (useMouse, useItemList) are made directly at the top level of <script setup> before any other logic. | ✅ PASS - All composable calls (`useMousePosition()` and `useItemList()`) are made directly at the top level of `<script setup>`, not inside callbacks, promises, or after await statements. |
 
 ⚪ **No difference** — all passed
 
@@ -271,7 +275,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| called-in-setup | ✅ PASS - All composable calls (`useMousePosition`, `useItemList`) are at the top level of `<script setup>`, not inside callbacks or async contexts. | ✅ PASS - All composable calls (useMouse, useItemList) are made directly at the top level of <script setup> in proper setup context. | ✅ PASS - All composable calls (`useMousePosition` and `useItemList`) are at the top level of `<script setup>`, not inside any callbacks, promises, or after await statements. |
+| called-in-setup | ✅ PASS - All composable calls (useMousePosition, useItemList) are made directly at the top level of <script setup>, not inside callbacks or after await statements. | ✅ PASS - All composable calls (useMouse, useItemList) are at the top level of <script setup>, not inside callbacks or after await. | ✅ PASS - All composable calls (useMousePosition, useItemList) are at the top level of <script setup>, before any other logic or event handlers. |
 
 ⚪ **No difference** — all passed
 
@@ -279,7 +283,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| called-in-setup | ✅ PASS - All composable calls (`useMousePosition`, `useItemList`) are made directly at the top level of `<script setup>`, not inside callbacks or conditional blocks. | ✅ PASS - All composable calls (useMouse, useItemList) are made synchronously at the top level of <script setup>, not inside any callbacks, promises, or after await statements. | ✅ PASS - All composable calls (`useMousePosition`, `useItemList`) are at the top level of `<script setup>`, not inside callbacks or conditional blocks. |
+| called-in-setup | ✅ PASS - All composable calls (useMousePosition, useItemList) are made directly at the top level of <script setup>, not inside callbacks or conditional blocks. | ✅ PASS - All composable calls (useMouse, useItemList) are made directly at the top level of <script setup>, not inside any callbacks, promises, or after await statements. | ✅ PASS - All composable calls (useMousePosition, useItemList) are at the top level of <script setup>, not inside callbacks or conditional blocks. |
 
 ⚪ **No difference** — all passed
 
@@ -290,7 +294,7 @@
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
 | multiple-composables | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
-| split-concerns | ✅ PASS - Cart functionality is properly split into focused composables: useCartItems (state management), useCartApi (HTTP operations), useCartTotals (calculations), and useCheckout (checkout flow), with useCart as a clean composition layer. | ✅ PASS - Composables are well-split into single responsibilities: `useCartItems` (state management), `useCartFetch` (API operations), `useCartTotals` (calculations), and `useCheckout` (checkout logic). | ✅ PASS - Code is properly split into focused composables: useCartItems (state management), useFetchCart (data fetching), useCartTotals (calculations), useCheckout (checkout logic), with useCart as a clean orchestrator. |
+| split-concerns | ✅ PASS - Code is properly split into focused composables: useCartItems (state management), useCartApi (HTTP operations), useCartTotals (calculations), useCheckout (checkout flow), with useCart as a clean orchestration layer. | ✅ PASS - Code is properly split into focused composables: useCartItems (state management), useCartFetch (API operations), useCartTotals (calculations), and useCheckout (checkout logic), each with single responsibility. | ✅ PASS - Code splits cart functionality into focused composables: useCartItems (item management), useFetchCart (data fetching), useCartTotals (calculations), and useCheckout (order processing), with useCart serving as a clean composition layer. |
 
 ⚪ **No difference** — all passed
 
@@ -299,7 +303,7 @@
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
 | multiple-composables | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
-| split-concerns | ✅ PASS - Well-separated composables: useCartItems (state), useCartApi (HTTP), useCartTotals (calculations), useCheckout (checkout flow), with main useCart orchestrating them. | ✅ PASS - Code is properly split into focused composables: useCartItems (state management), useCartFetch (API operations), useCartTotals (calculations), and useCheckout (checkout flow), each with single responsibility. | ✅ PASS - Code is split into focused composables: useCartItems (item management), useFetchCart (API operations), useCartTotals (calculations), useCheckout (payment flow), with useCart as a clean composition layer. |
+| split-concerns | ✅ PASS - Code is properly split into 5 focused composables: useCartItems (state), useCartApi (HTTP), useCartTotals (calculations), useCheckout (checkout flow), with useCart as coordinator. | ✅ PASS - Code is well-split into focused composables: useCartItems (state management), useCartFetch (API operations), useCartTotals (calculations), and useCheckout (checkout process), each with single responsibility. | ✅ PASS - composables are well-separated into focused units: useFetchCart (API operations), useCartItems (item management), useCartTotals (calculations), useCheckout (payment flow), with useCart as a clean composition layer. |
 
 ⚪ **No difference** — all passed
 
@@ -308,7 +312,7 @@
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
 | multiple-composables | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
-| split-concerns | ✅ PASS - Code is properly split into focused composables: useCartItems (state management), useCartApi (HTTP requests), useCartTotals (calculations), useCheckout (checkout flow), with useCart as a facade composer. | ✅ PASS - Code is well-split into focused composables: useCartItems (state management), useCartFetch (API operations), useCartTotals (calculations), and useCheckout (checkout flow). | ✅ PASS - The code is properly split into focused, single-responsibility composables: `useCartItems` (item management), `useFetchCart` (API operations), `useCartTotals` (calculations), and `useCheckout` (checkout flow), with `useCart` serving as a clean composition layer. |
+| split-concerns | ✅ PASS - Cart functionality is properly split into focused composables: useCartItems (state), useCartApi (HTTP), useCartTotals (calculations), useCheckout (process), with useCart as a clean facade. | ✅ PASS - Composables are properly split into focused units: useCartItems (state management), useCartFetch (API operations), useCartTotals (calculations), and useCheckout (checkout flow), each with single responsibility. | ✅ PASS - Each composable handles a single responsibility: useCartItems (state management), useFetchCart (API operations), useCartTotals (calculations), useCheckout (payment flow), with useCart as a clean aggregator. |
 
 ⚪ **No difference** — all passed
 
@@ -322,7 +326,7 @@
   '\n' +
   'CODE:\n' +
   '**package-lock.json**:\n' +
-  '```typescript... | ✅ PASS - Business logic is extracted into pure `calculateShippingCost` function, composable just wires refs to it via computed. | ✅ PASS - Business logic is extracted into `calculateShippingCost` pure function, composable only wires refs to it via computed. |
+  '```typescript... | ✅ PASS - Business logic is cleanly extracted into pure `calculateShippingCost` function, composable just wraps it reactively. | ✅ PASS - Business logic is properly extracted into pure `calculateShippingCost` function, with composable acting as thin reactive wrapper. |
 
 🟢 **Full improved**: pure-function-extracted
 🔵 **Extracted improved**: pure-function-extracted
@@ -335,7 +339,7 @@
   '\n' +
   'CODE:\n' +
   '**package-lock.json**:\n' +
-  '```typescript... | ✅ PASS - Business logic is properly extracted into a pure `calculateShippingCost` function, with the composable only providing a thin reactive wrapper via computed. | ❌ AI judge error: The argument 'args[1]' must be a string without null bytes. Received 'You are evaluating Vue 3 / TypeScript code quality.\n' +
+  '```typescript... | ✅ PASS - Business logic is cleanly separated into a pure `calculateShippingCost` function, with the composable serving as a thin reactive wrapper that just wires refs to the pure function. | ❌ AI judge error: The argument 'args[1]' must be a string without null bytes. Received 'You are evaluating Vue 3 / TypeScript code quality.\n' +
   '\n' +
   'CODE:\n' +
   '**package-lock.json**:\n' +
@@ -351,7 +355,7 @@
   '\n' +
   'CODE:\n' +
   '**package-lock.json**:\n' +
-  '```typescript... | ✅ PASS - Business logic is cleanly extracted into pure `calculateShippingCost` function, with composable only providing reactive wrapper via computed. | ✅ PASS - Business logic is extracted into pure `calculateShippingCost` function, composable just wraps it with reactivity. |
+  '```typescript... | ✅ PASS - Business logic is cleanly extracted into a pure `calculateShippingCost` function, with the composable serving as a thin reactive wrapper that only wires refs to the pure function. | ✅ PASS - Business logic is extracted into pure `calculateShippingCost` function, composable only handles reactive wiring. |
 
 🟢 **Full improved**: pure-function-extracted
 🔵 **Extracted improved**: pure-function-extracted
@@ -362,7 +366,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| util-functions | ❌ FAIL - Currency and date formatting have both utility functions AND composable wrappers, violating the separation principle. | ✅ PASS - Formatting functions are plain utilities, only reactive window focus logic is properly implemented as a composable. | ✅ PASS - Currency and date formatting are plain utility functions, only the reactive window focus tracking uses Vue composables correctly. |
+| util-functions | ❌ FAIL - Both useFormatCurrency and useFormatDate are unnecessary composable wrappers around pure formatting functions; only useWindowFocus should be a composable since it manages reactive state. | ✅ PASS - Formatting functions are pure utilities while only reactive window focus tracking uses composable pattern. | ✅ PASS - Currency and date formatting are pure utility functions, while window focus tracking is properly implemented as a reactive composable with lifecycle hooks. |
 
 🟢 **Full improved**: util-functions
 🔵 **Extracted improved**: util-functions
@@ -371,7 +375,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| util-functions | ❌ FAIL - Currency and date formatting are implemented as both utility functions AND composables, when they should only be utility functions since they're pure formatting operations. | ✅ PASS - formatters are plain utility functions, only reactive window focus tracking uses composable pattern | ✅ PASS - Pure formatting functions are utility functions, only reactive window focus tracking uses composable pattern with refs and lifecycle hooks. |
+| util-functions | ❌ FAIL - Currency and date formatting are wrapped as composables when they should be plain utility functions since they're pure functions without reactive state. | ✅ PASS - Pure formatting functions are correctly written as plain utility functions, while only the reactive window focus tracking uses the composable pattern. | ✅ PASS - formatting functions are plain utilities, only reactive window focus logic uses composable pattern |
 
 🟢 **Full improved**: util-functions
 🔵 **Extracted improved**: util-functions
@@ -380,7 +384,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| util-functions | ❌ FAIL - Currency and date functions are provided both as pure utilities AND wrapped as composables, when they should only be pure utilities since they're stateless formatters. | ✅ PASS - Currency and date formatters are plain utility functions while window focus tracking is properly implemented as a reactive composable. | ✅ PASS - Currency and date formatting are plain utility functions, only reactive window focus tracking uses composable pattern. |
+| util-functions | ❌ FAIL - formatCurrency and formatDate are properly written as plain utility functions, but they're also wrapped as unnecessary composables (useFormatCurrency, useFormatDate) when simple computed properties would suffice. | ✅ PASS - Currency and date formatting are pure utility functions, while window focus tracking is properly implemented as a composable with reactive state and lifecycle hooks. | ✅ PASS - Pure formatting functions are correctly written as plain utility functions, while only the reactive window focus tracking uses composable pattern. |
 
 🟢 **Full improved**: util-functions
 🔵 **Extracted improved**: util-functions
@@ -487,7 +491,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| logical-grouping | ❌ FAIL - Code is grouped by Vue API type (all refs together, all computed together, all functions together) rather than by logical concerns like gallery, cart, and reviews functionality. | ✅ PASS - Code is clearly organized by logical concerns with section comments separating product info, image gallery, cart/quantity, and reviews functionality rather than grouping by Vue API types. | ✅ PASS - Code is organized by logical concerns: product image gallery, cart controls, and reviews sections are clearly grouped together with their related state, computed values, and functions. |
+| logical-grouping | ❌ FAIL - Code is organized by Vue API type (all refs together, all computed together, all functions together) rather than by logical concern (gallery, cart, reviews features grouped separately). | ✅ PASS - Code is organized by logical concerns with clear section comments: Product Info, Image Gallery, Cart/Quantity, and Reviews, each grouping related reactive state, computed properties, and functions together. | ✅ PASS - Code is well-organized by logical concerns: product image gallery section, cart controls section, and reviews section, with related reactive state, computed properties, and functions grouped together within each concern. |
 
 🟢 **Full improved**: logical-grouping
 🔵 **Extracted improved**: logical-grouping
@@ -496,7 +500,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| logical-grouping | ❌ FAIL - Code groups by Vue API type (refs section, computed section, methods section) rather than logical concerns (gallery, cart, reviews). | ✅ PASS - Code is organized by logical concerns with clear section comments: Product Info, Image Gallery, Cart/Quantity, and Reviews, with related state and functions grouped together rather than separating refs, computed, and functions by type. | ✅ PASS - Code is organized by logical concerns (Image gallery state, Cart state, Reviews state) with related reactive data, computed properties, and functions grouped together within each concern. |
+| logical-grouping | ❌ FAIL - Code is grouped by Vue API type (all refs together, all computed together, all functions together) rather than by logical concern (gallery, cart, reviews logic). | ✅ PASS - Code is organized by logical concerns with clear sections: Product Info, Image Gallery, Cart/Quantity, and Reviews, each grouping related state and functions together. | ✅ PASS - Code is well-organized by logical concerns (image gallery state, cart state, reviews state) with clear comment separators, not grouped by Vue API types. |
 
 🟢 **Full improved**: logical-grouping
 🔵 **Extracted improved**: logical-grouping
@@ -505,7 +509,7 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| logical-grouping | ❌ FAIL - Code groups by Vue API type (all refs together, all computed together, all functions together) instead of organizing by logical concerns like gallery logic, cart logic, reviews logic. | ✅ PASS - Code is clearly organized by logical concerns with comment sections for Product Info, Image Gallery, Cart, and Reviews, each grouping related state and functions together. | ✅ PASS - Code is clearly organized by logical concerns with sections for Product Info, Cart, and Reviews, each containing their related refs, computed properties, and functions together. |
+| logical-grouping | ❌ FAIL - Code is organized by Vue API type (all refs together, all computed together, all functions together) rather than by logical concern (product data, gallery logic, cart logic, reviews logic). | ✅ PASS - code is organized by logical concerns with clear comment separators: Product Info, Image Gallery, Cart, and Reviews sections each group related state and logic together. | ✅ PASS - Code is organized by logical concerns (Product Info, Cart, Reviews sections) with related refs, computed, and functions grouped together rather than by Vue API type. |
 
 🟢 **Full improved**: logical-grouping
 🔵 **Extracted improved**: logical-grouping
@@ -517,27 +521,27 @@
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
 | has-key | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
-| key-uses-id | ❌ pattern not found, expected present | ❌ pattern not found, expected present | ❌ pattern not found, expected present |
+| key-uses-id | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
 
-⚪ **No difference** — all failed the same checks
+⚪ **No difference** — all passed
 
 **Trial 1**
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
 | has-key | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
-| key-uses-id | ❌ pattern not found, expected present | ❌ pattern not found, expected present | ❌ pattern not found, expected present |
+| key-uses-id | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
 
-⚪ **No difference** — all failed the same checks
+⚪ **No difference** — all passed
 
 **Trial 2**
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
 | has-key | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
-| key-uses-id | ❌ pattern not found, expected present | ❌ pattern not found, expected present | ❌ pattern not found, expected present |
+| key-uses-id | ✅ pattern found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
 
-⚪ **No difference** — all failed the same checks
+⚪ **No difference** — all passed
 
 ### multi-word-component-names.md
 
@@ -545,23 +549,24 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| multi-word-name | ✅ PASS - Component uses the multi-word name "ProfileCard" which follows Vue's naming convention requiring multi-word component names. | ✅ PASS - Component uses "ProfileCard" which is a multi-word name combining "Profile" and "Card". | ✅ PASS - Component uses multi-word name "UserProfileCard" as evidenced by the CSS class prefix "user-profile-card" throughout the template. |
+| multi-word-name | ✅ PASS - Component uses "ProfileCard" which is a multi-word name consisting of "Profile" + "Card". | ❌ FAIL - Component appears to be named "ProfileCard" (multi-word) but the criteria asks to check filename reference which is not provided in the code snippet. | ✅ PASS - Component uses multi-word name "UserProfileCard" (evident from CSS class naming pattern .user-profile-card) |
 
-⚪ **No difference** — all passed
+🔴 **Full regressed**: multi-word-name
 
 **Trial 1**
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| multi-word-name | ✅ PASS - Component name "ProfileCard" is multi-word (Profile + Card), following Vue style guide requirements. | ✅ PASS - Component uses multi-word name "UserProfileCard" (as evidenced by the CSS class prefix "user-profile-card") | ✅ PASS - Component uses multi-word name "UserProfileCard" as evidenced by the BEM class naming convention `.user-profile-card` throughout the template and styles. |
+| multi-word-name | ❌ FAIL - The component appears to be named "ProfileCard" based on the CSS class prefix, which is multi-word, but without seeing the actual filename or explicit component name definition, I cannot definitively confirm this follows the multi-word naming convention. | ✅ PASS - Component uses multi-word name "UserProfileCard" (evident from CSS class prefix `.user-profile-card`) | ✅ PASS - Component uses multi-word name "user-profile-card" in template and CSS classes, following Vue's multi-word component naming convention. |
 
-⚪ **No difference** — all passed
+🟢 **Full improved**: multi-word-name
+🔵 **Extracted improved**: multi-word-name
 
 **Trial 2**
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| multi-word-name | ❌ FAIL - Component appears to be named "ProfileCard" based on CSS classes, but the actual component name/filename isn't visible in the code provided to confirm it's multi-word. | ✅ PASS - Component uses multi-word name "user-profile-card" (3 words) which follows Vue naming conventions. | ✅ PASS - The component uses "UserProfileCard" which is a multi-word name consisting of three words. |
+| multi-word-name | ❌ FAIL - Component uses single-word name "profile-card" instead of multi-word like "ProfileCard" or "UserProfile" | ✅ PASS - Component uses multi-word name "UserProfileCard" as evidenced by the CSS class prefix "user-profile-card" throughout the template. | ✅ PASS - Component uses multi-word name "UserProfileCard" (evident from CSS class prefix "user-profile-card") |
 
 🟢 **Full improved**: multi-word-name
 🔵 **Extracted improved**: multi-word-name
@@ -721,28 +726,31 @@
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| script-setup-ts | ❌ pattern not found, expected present | ❌ pattern not found, expected present | ❌ pattern not found, expected present |
+| script-setup-ts | ❌ pattern not found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
 | no-options-api | ✅ pattern not found, expected absent | ✅ pattern not found, expected absent | ✅ pattern not found, expected absent |
 
-⚪ **No difference** — all failed the same checks
+🟢 **Full improved**: script-setup-ts
+🔵 **Extracted improved**: script-setup-ts
 
 **Trial 1**
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| script-setup-ts | ❌ pattern not found, expected present | ❌ pattern not found, expected present | ❌ pattern not found, expected present |
+| script-setup-ts | ❌ pattern not found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
 | no-options-api | ✅ pattern not found, expected absent | ✅ pattern not found, expected absent | ✅ pattern not found, expected absent |
 
-⚪ **No difference** — all failed the same checks
+🟢 **Full improved**: script-setup-ts
+🔵 **Extracted improved**: script-setup-ts
 
 **Trial 2**
 
 | Check | Baseline | Full | Extracted |
 |-------|----------|------|-----------|
-| script-setup-ts | ❌ pattern not found, expected present | ❌ pattern not found, expected present | ❌ pattern not found, expected present |
+| script-setup-ts | ❌ pattern not found, expected present | ✅ pattern found, expected present | ✅ pattern found, expected present |
 | no-options-api | ✅ pattern not found, expected absent | ✅ pattern not found, expected absent | ✅ pattern not found, expected absent |
 
-⚪ **No difference** — all failed the same checks
+🟢 **Full improved**: script-setup-ts
+🔵 **Extracted improved**: script-setup-ts
 
 ### template-on-the-top.md
 
