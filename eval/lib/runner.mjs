@@ -111,10 +111,14 @@ async function readWorkspaceFiles(dir) {
 /**
  * Run claude generation in an isolated environment.
  * Returns { code, setup } where setup captures the Claude Code config used.
+ *
+ * @param {string} prompt
+ * @param {string|null} ruleFile - null for baseline
+ * @param {"full"|"extracted"|null} ruleMode - null for baseline
+ * @param {object} opts
  */
-async function generate(prompt, ruleFile, opts) {
+async function generate(prompt, ruleFile, ruleMode, opts) {
   const model = opts.model || "claude-opus-4-5-20251101"
-  const ruleMode = opts.ruleMode || "full"
 
   const isolated = await createIsolatedEnv(
     ruleFile || undefined,
@@ -137,7 +141,7 @@ async function generate(prompt, ruleFile, opts) {
     prompt,
     allowedTools,
     ruleFile: ruleFile || null,
-    ruleMode: ruleFile ? ruleMode : null,
+    ruleMode: ruleMode || null,
     ruleContent,
   }
 
@@ -172,7 +176,7 @@ async function generate(prompt, ruleFile, opts) {
 }
 
 /**
- * Format setup context as markdown (rule-level, covers both variants).
+ * Format setup context as markdown for a specific variant.
  */
 function formatSetupMd(setup) {
   const lines = ["# Setup\n"]
@@ -195,7 +199,32 @@ function formatSetupMd(setup) {
 }
 
 /**
+ * Format combined setup for both rule variants.
+ */
+function formatCombinedSetupMd(fullSetup, extractedSetup) {
+  const lines = ["# Setup\n"]
+  lines.push(`- **Model**: ${fullSetup.model}`)
+  lines.push(`- **Rule file**: ${fullSetup.ruleFile}`)
+  lines.push(`- **Allowed tools**: ${fullSetup.allowedTools.join(", ")}`)
+  lines.push("")
+  lines.push("## Prompt\n")
+  lines.push("```")
+  lines.push(fullSetup.prompt)
+  lines.push("```\n")
+  lines.push("## Full rule content\n")
+  lines.push("````markdown")
+  lines.push(fullSetup.ruleContent || "")
+  lines.push("````\n")
+  lines.push("## Extracted rule content\n")
+  lines.push("````markdown")
+  lines.push(extractedSetup.ruleContent || "")
+  lines.push("````\n")
+  return lines.join("\n")
+}
+
+/**
  * Run a single eval definition (all trials).
+ * Always runs 3 variants: baseline, full, extracted.
  */
 export async function runEval(evalDef, opts = {}) {
   const trials = opts.trials ?? evalDef.trials ?? 1
@@ -207,34 +236,45 @@ export async function runEval(evalDef, opts = {}) {
   }
 
   for (let t = 0; t < trials; t++) {
-    const trial = { index: t, baseline: {}, withRule: {} }
+    const trial = { index: t, baseline: {}, full: {}, extracted: {} }
 
     if (!opts.skipGeneration) {
       // Generate baseline (no rule)
-      const baselineResult = await generate(evalDef.prompt, null, opts)
+      const baselineResult = await generate(evalDef.prompt, null, null, opts)
       trial.baseline.code = baselineResult.code
       trial.baseline.setup = baselineResult.setup
 
-      // Generate with rule
-      const withRuleResult = await generate(evalDef.prompt, evalDef.rule, opts)
-      trial.withRule.code = withRuleResult.code
-      trial.withRule.setup = withRuleResult.setup
+      // Generate with full rule (entire markdown)
+      const fullResult = await generate(evalDef.prompt, evalDef.rule, "full", opts)
+      trial.full.code = fullResult.code
+      trial.full.setup = fullResult.setup
+
+      // Generate with extracted rule (AI agent block only)
+      const extractedResult = await generate(evalDef.prompt, evalDef.rule, "extracted", opts)
+      trial.extracted.code = extractedResult.code
+      trial.extracted.setup = extractedResult.setup
     } else {
-      // Load from results dir (supports both old single-file and new directory format)
+      // Load from results dir
       const dir = opts.resultsDir
       const slug = evalDef.rule.replace(".md", "")
       trial.baseline.code = await loadVariant(dir, slug, `trial-${t}-baseline`)
-      trial.withRule.code = await loadVariant(dir, slug, `trial-${t}-with-rule`)
+      trial.full.code = await loadVariant(dir, slug, `trial-${t}-full`)
+      trial.extracted.code = await loadVariant(dir, slug, `trial-${t}-extracted`)
     }
 
-    // Evaluate both
+    // Evaluate all three
     trial.baseline.checks = await evaluate(
       trial.baseline.code,
       evalDef.checks,
       opts,
     )
-    trial.withRule.checks = await evaluate(
-      trial.withRule.code,
+    trial.full.checks = await evaluate(
+      trial.full.code,
+      evalDef.checks,
+      opts,
+    )
+    trial.extracted.checks = await evaluate(
+      trial.extracted.code,
       evalDef.checks,
       opts,
     )
@@ -306,18 +346,22 @@ export async function saveResults(evalResult, resultsDir) {
   const dir = join(resultsDir, slug)
   await mkdir(dir, { recursive: true })
 
-  // Save setup once at rule level (from first trial's with-rule variant, has rule content)
+  // Save combined setup at rule level (from first trial, has both rule contents)
   const firstTrial = evalResult.trials[0]
-  const setup = firstTrial?.withRule?.setup
-  if (setup) {
-    await writeFile(join(dir, "setup.md"), formatSetupMd(setup))
+  const fullSetup = firstTrial?.full?.setup
+  const extractedSetup = firstTrial?.extracted?.setup
+  if (fullSetup && extractedSetup) {
+    await writeFile(join(dir, "setup.md"), formatCombinedSetupMd(fullSetup, extractedSetup))
+  } else if (fullSetup) {
+    await writeFile(join(dir, "setup.md"), formatSetupMd(fullSetup))
   }
 
   for (const trial of evalResult.trials) {
     const i = trial.index
     for (const [variant, variantName] of [
       ["baseline", `trial-${i}-baseline`],
-      ["withRule", `trial-${i}-with-rule`],
+      ["full", `trial-${i}-full`],
+      ["extracted", `trial-${i}-extracted`],
     ]) {
       const variantDir = join(dir, variantName)
       await mkdir(variantDir, { recursive: true })

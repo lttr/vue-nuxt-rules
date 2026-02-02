@@ -14,7 +14,6 @@ const { values: opts } = parseArgs({
     model: { type: "string" },
     "skip-generation": { type: "boolean", default: false },
     "results-dir": { type: "string" },
-    "rule-mode": { type: "string" },
   },
 })
 
@@ -48,7 +47,6 @@ for (const evalDef of evals) {
   const result = await runEval(evalDef, {
     trials: opts.trials ? parseInt(opts.trials) : undefined,
     model: opts.model,
-    ruleMode: opts["rule-mode"] || "full",
     skipGeneration: opts["skip-generation"],
     resultsDir: RESULTS_DIR,
   })
@@ -57,15 +55,18 @@ for (const evalDef of evals) {
   allResults.push(result)
 
   // Print quick summary
-  const baseline = result.trials
+  const total = result.trials.flatMap((t) => t.baseline.checks).length
+  const baselinePass = result.trials
     .flatMap((t) => t.baseline.checks)
     .filter((c) => c.passed).length
-  const withRule = result.trials
-    .flatMap((t) => t.withRule.checks)
+  const fullPass = result.trials
+    .flatMap((t) => t.full.checks)
     .filter((c) => c.passed).length
-  const total = result.trials.flatMap((t) => t.baseline.checks).length
+  const extractedPass = result.trials
+    .flatMap((t) => t.extracted.checks)
+    .filter((c) => c.passed).length
   console.log(
-    `  baseline: ${baseline}/${total}  with-rule: ${withRule}/${total}\n`,
+    `  baseline: ${baselinePass}/${total}  full: ${fullPass}/${total}  extracted: ${extractedPass}/${total}\n`,
   )
 }
 
@@ -75,12 +76,12 @@ const { summary } = await generateReport(allResults, RESULTS_DIR)
 console.log("\n=== Summary ===\n")
 const pad = (s, n) => s.padEnd(n)
 console.log(
-  `${pad("Rule", 40)} ${pad("Classification", 18)} ${pad("Baseline", 10)} With Rule`,
+  `${pad("Rule", 40)} ${pad("Classification", 20)} ${pad("Baseline", 10)} ${pad("Full", 10)} Extracted`,
 )
-console.log("-".repeat(85))
+console.log("-".repeat(95))
 for (const s of summary) {
   console.log(
-    `${pad(s.rule, 40)} ${pad(s.classification, 18)} ${pad(s.baseline, 10)} ${s.withRule}`,
+    `${pad(s.rule, 40)} ${pad(s.classification, 20)} ${pad(s.baseline, 10)} ${pad(s.full, 10)} ${s.extracted}`,
   )
 }
 
