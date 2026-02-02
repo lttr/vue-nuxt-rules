@@ -16,6 +16,7 @@ This documentation provides practical, automatable code style rules designed to 
 - **Opinionated** - Not for every project, but a good start anyway
 - **Automated** - Most rules are automatable by ESLint, TypeScript, or AI-based tools
 - **Pragmatic** - Every rule has a reason, but you can adapt them to your needs
+- **Evaluated** - Built-in eval framework to measure how effectively AI agents follow each rule
 
 ## Documentation
 

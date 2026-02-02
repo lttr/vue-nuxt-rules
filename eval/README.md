@@ -7,7 +7,7 @@ Measures which AI rules LLMs already know vs which need explicit injection.
 For each rule, the tool:
 
 1. **Generates code without the rule** (baseline) — prompts an LLM with a feature description only
-2. **Generates code with the rule injected** — same prompt + the rule from the `.md` file's "Rule for AI agents" section
+2. **Generates code with the rule loaded** — same prompt, but with the rule placed in `.claude/rules/` in an isolated environment
 3. **Evaluates both outputs** against checks (regex patterns and/or AI judge)
 4. **Classifies** the rule:
    - **Already Known** — baseline passes all checks (rule adds no value)
@@ -32,9 +32,21 @@ node run.mjs --trials 3
 # Pin model (default: claude-opus-4-20250514)
 node run.mjs --model claude-sonnet-4-20250514
 
+# Use only the "Rule for AI agents" block instead of full .md
+node run.mjs --rule-mode extracted
+
 # Re-evaluate existing generated code (skip generation)
 node run.mjs --skip-generation --results-dir results/2026-01-29T08-00-16
 ```
+
+### Rule Modes
+
+Each eval runs in an isolated temp environment with credentials copied from `~/.claude/`. Rules are delivered via Claude Code's native `.claude/rules/` mechanism.
+
+| Mode        | Description                                                       |
+| ----------- | ----------------------------------------------------------------- |
+| `full`      | Copies the entire rule `.md` file into `.claude/rules/` (default) |
+| `extracted` | Extracts only the "Rule for AI agents" code block                 |
 
 ## Eval Definition Format
 
