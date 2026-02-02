@@ -1,8 +1,9 @@
-import { readFile, mkdir, writeFile, readdir } from "node:fs/promises"
+import { readFile, mkdir, mkdtemp, writeFile, readdir, cp, rm } from "node:fs/promises"
 import { join, dirname } from "node:path"
 import { spawn } from "node:child_process"
+import { tmpdir, homedir } from "node:os"
 import { parse as parseYaml } from "yaml"
-import { extractRule } from "./extract-rule.mjs"
+import { extractRule, getRulePath } from "./extract-rule.mjs"
 import { evaluate } from "./evaluator.mjs"
 
 /**
@@ -47,26 +48,70 @@ function parseMultiFile(rawOutput) {
 }
 
 /**
- * Build system prompt for code generation.
+ * Build system prompt for code generation (format-only, no rule text).
  */
-function buildSystemPrompt(ruleText) {
-  const base = `You are a Vue 3 / Nuxt expert.
+function buildSystemPrompt() {
+  return `You are a Vue 3 / Nuxt expert.
 If your response contains multiple files, separate them with a delimiter line:
 // --- file: <relative-path> ---
 Respond ONLY with code. No explanations, no markdown fences.`
-  if (!ruleText) return base
-  return `You are a Vue 3 / Nuxt expert. Follow these rules strictly:\n\n${ruleText}\n\nIf your response contains multiple files, separate them with a delimiter line:\n// --- file: <relative-path> ---\nRespond ONLY with code. No explanations, no markdown fences.`
 }
 
 /**
- * Spawn claude -p and collect stdout. Uses detached mode to avoid
- * issues when running inside a parent claude session.
+ * Create an isolated temp environment for running claude.
+ * Copies credentials so claude can authenticate, and optionally
+ * places a rule file into .claude/rules/ in the workspace.
+ *
+ * @param {string} [ruleFile] - rule markdown filename (e.g. "prefer-definemodel.md")
+ * @param {"full"|"extracted"} [mode] - how to process the rule file
+ * @returns {{ home: string, workspace: string, cleanup: () => Promise<void> }}
  */
-function spawnClaude(args, timeout = 180_000) {
+async function createIsolatedEnv(ruleFile, mode) {
+  const tempHome = await mkdtemp(join(tmpdir(), "eval-home-"))
+  const workspace = await mkdtemp(join(tmpdir(), "eval-ws-"))
+
+  // Copy credentials so claude can authenticate
+  const srcCreds = join(homedir(), ".claude", ".credentials.json")
+  const destClaudeDir = join(tempHome, ".claude")
+  await mkdir(destClaudeDir, { recursive: true })
+  await cp(srcCreds, join(destClaudeDir, ".credentials.json"))
+
+  // Place rule file if requested
+  if (ruleFile) {
+    const rulesDir = join(workspace, ".claude", "rules")
+    await mkdir(rulesDir, { recursive: true })
+
+    if (mode === "extracted") {
+      const extracted = await extractRule(ruleFile)
+      await writeFile(join(rulesDir, ruleFile), extracted)
+    } else {
+      // "full" mode — copy the entire markdown file
+      const srcPath = getRulePath(ruleFile)
+      await cp(srcPath, join(rulesDir, ruleFile))
+    }
+  }
+
+  return {
+    home: tempHome,
+    workspace,
+    async cleanup() {
+      await rm(tempHome, { recursive: true, force: true })
+      await rm(workspace, { recursive: true, force: true })
+    },
+  }
+}
+
+/**
+ * Spawn claude -p and collect stdout.
+ * Accepts optional env and cwd overrides for isolated environments.
+ */
+function spawnClaude(args, { timeout = 180_000, env, cwd } = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn("claude", args, {
       detached: true,
       stdio: ["ignore", "pipe", "pipe"],
+      ...(cwd && { cwd }),
+      ...(env && { env: { ...process.env, ...env } }),
     })
 
     let stdout = ""
@@ -88,25 +133,43 @@ function spawnClaude(args, timeout = 180_000) {
 }
 
 /**
- * Run claude generation.
+ * Run claude generation in an isolated environment.
  */
-async function generate(prompt, ruleText, opts) {
+async function generate(prompt, ruleFile, opts) {
   const model = opts.model || "claude-opus-4-20250514"
-  const systemPrompt = buildSystemPrompt(ruleText)
+  const ruleMode = opts.ruleMode || "full"
+  const systemPrompt = buildSystemPrompt()
 
-  const args = [
-    "-p",
-    prompt,
-    "--system-prompt",
-    systemPrompt,
-    "--model",
-    model,
-    "--output-format",
-    "text",
-  ]
+  const isolated = await createIsolatedEnv(
+    ruleFile || undefined,
+    ruleFile ? ruleMode : undefined,
+  )
 
-  const stdout = await spawnClaude(args)
-  return parseMultiFile(stripFences(stdout.trim()))
+  try {
+    const args = [
+      "-p",
+      prompt,
+      "--system-prompt",
+      systemPrompt,
+      "--model",
+      model,
+      "--output-format",
+      "text",
+      "--allowedTools",
+      'Bash(*)',
+      "Read",
+      "Write",
+      "Edit",
+    ]
+
+    const stdout = await spawnClaude(args, {
+      env: { HOME: isolated.home },
+      cwd: isolated.workspace,
+    })
+    return parseMultiFile(stripFences(stdout.trim()))
+  } finally {
+    await isolated.cleanup()
+  }
 }
 
 /**
@@ -114,7 +177,6 @@ async function generate(prompt, ruleText, opts) {
  */
 export async function runEval(evalDef, opts = {}) {
   const trials = opts.trials ?? evalDef.trials ?? 1
-  const ruleText = await extractRule(evalDef.rule)
 
   const results = {
     rule: evalDef.rule,
@@ -130,7 +192,7 @@ export async function runEval(evalDef, opts = {}) {
       trial.baseline.code = await generate(evalDef.prompt, null, opts)
 
       // Generate with rule
-      trial.withRule.code = await generate(evalDef.prompt, ruleText, opts)
+      trial.withRule.code = await generate(evalDef.prompt, evalDef.rule, opts)
     } else {
       // Load from results dir (supports both old single-file and new directory format)
       const dir = opts.resultsDir

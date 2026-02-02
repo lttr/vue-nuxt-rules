@@ -14,6 +14,7 @@ const { values: opts } = parseArgs({
     model: { type: "string" },
     "skip-generation": { type: "boolean", default: false },
     "results-dir": { type: "string" },
+    "rule-mode": { type: "string" },
   },
 })
 
@@ -47,6 +48,7 @@ for (const evalDef of evals) {
   const result = await runEval(evalDef, {
     trials: opts.trials ? parseInt(opts.trials) : undefined,
     model: opts.model,
+    ruleMode: opts["rule-mode"] || "full",
     skipGeneration: opts["skip-generation"],
     resultsDir: RESULTS_DIR,
   })
