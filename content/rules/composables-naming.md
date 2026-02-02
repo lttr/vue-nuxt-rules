@@ -31,7 +31,7 @@ export function getCounter() {
 ## Rule for AI agents
 
 ```
-ALWAYS prefix composable names with "use" (useMouse, useFetch). Name files as useFeatureName.ts (camelCase). One composable per file.
+- ALWAYS prefix names with `use` (e.g. `useMouse`). One composable per file, named `useFeatureName.ts`
 ```
 
 ## Eslint rule

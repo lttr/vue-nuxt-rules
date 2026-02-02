@@ -31,7 +31,7 @@ function useMouse() {
 ## Rule for AI agents
 
 ```
-ALWAYS cleanup side effects in onUnmounted(); use onMounted() for DOM operations
+- ALWAYS clean up side effects via `onUnmounted()`; use `onMounted()` for DOM access
 ```
 
 ## Eslint rule

@@ -22,7 +22,7 @@ onMounted(async () => {
 ## Rule for AI agents
 
 ```
-ALWAYS call composables in <script setup> or setup(), never in utils/callbacks/promises
+- ALWAYS call composables in `<script setup>` or `setup()` only — never in callbacks, utils, or async contexts
 ```
 
 ## Eslint rule

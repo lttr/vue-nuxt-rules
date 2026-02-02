@@ -1,39 +1,40 @@
 # AI Agent Rules
 
 ```
-# Conventions
+# Vue/Nuxt Code Conventions
 
-## Vue components
+## Vue Components
 
-- ALWAYS use TypeScript type-based syntax for defineProps() instead of runtime PropType declarations
-- ALWAYS destructure props directly from defineProps() to maintain reactivity and enable inline defaults; if no props are used in the script, call defineProps() without destructuring
-- ALWAYS use `<script setup lang="ts">` for component's script section
-- ALWAYS place the <template> section at the top of Vue SFC files, before <script> and <style> sections
-- ALWAYS use key in v-for loops
-- ALWAYS use multi-word component names except for Nuxt pages and layouts
-- ALWAYS use shorthand syntax (`:propName`) when passing a prop with the same name as the variable, instead of the verbose form (`:propName="propName"`)
-- ALWAYS use type-based syntax for defineEmits in TypeScript instead of runtime array syntax
-- ALWAYS use v-for="item of items" instead of v-for="item in items" to match JavaScript for...of syntax
-- PREFER to group by logical concerns rather than grouping by type (data, methods, computed) within components
-- PREFER `ref()` for reactive state instead of `reactive()`
-- PREFER VueUse composables and utility functions over custom implementations for common tasks like state management, DOM interactions, and browser APIs
-- USE `defineModel()` for v-model implementations instead of manually defining props and emits
+- ALWAYS use `<script setup lang="ts">`
+- ALWAYS place `<template>` first in SFC files, before `<script>` and `<style>`
+- ALWAYS use TypeScript type-based syntax for `defineProps()` — no runtime PropType declarations
+- ALWAYS destructure props from `defineProps()` for reactivity and inline defaults; omit destructuring if props unused in script
+- ALWAYS use TypeScript type-based syntax for `defineEmits()` — no runtime array syntax
+- ALWAYS use `:key` on `v-for` elements
+- ALWAYS use `v-for="item of items"` (not `in`) to match JS `for...of`
+- ALWAYS use multi-word component names; exception: Nuxt `pages/` and `layouts/`
+- ALWAYS use same-name shorthand `:propName` instead of `:propName="propName"`
+- PREFER grouping `<script setup>` code by logical concern, not by API type (refs, computed, watch)
+- PREFER `ref()` over `reactive()` for state
+- PREFER VueUse composables over custom implementations for common browser/DOM/state tasks
+- USE `defineModel()` for two-way binding instead of manual prop+emit pairs
 
 ## Composables
 
-- ALWAYS call composables in <script setup> or setup(), never in utils/callbacks/promises
-- ALWAYS prefix composable names with "use" (useMouse, useFetch). Name files as useFeatureName.ts (camelCase). One composable per file.
-- ALWAYS return plain object with refs from composables, not reactive()
-- ALWAYS cleanup side effects in onUnmounted(); use onMounted() for DOM operations
-- Only create composables when needing reactivity/lifecycle; pure functions -> utils. Composables handle state/logic, not DOM/CSS/UI side effects. No toasts/modals inside composables — expose state, let components decide presentation.
-- Group code by logical concern, not by Vue API type (don't cluster all computed together). Within each concern: state → metadata (loading/error) → methods → return.
-- PREFER toValue() to normalize inputs - accept refs, getters, and plain values
-- Split monolithic composables by concern (useCart -> useAddToCart, useFetchCart, useRemoveFromCart)
-- Use watchEffect for reactive data fetching; always expose loading/error state refs
-- Separate pure business logic into plain functions; composable is a thin reactive wrapper. Test pure functions without Vue context.
-- Don't extract to shared composables/ until a second consumer exists. Ladder: inline → colocated file → shared composables/.
+- ALWAYS call composables in `<script setup>` or `setup()` only — never in callbacks, utils, or async contexts
+- ALWAYS prefix names with `use` (e.g. `useMouse`). One composable per file, named `useFeatureName.ts`
+- ALWAYS return a plain object of refs — never wrap return in `reactive()`
+- ALWAYS clean up side effects via `onUnmounted()`; use `onMounted()` for DOM access
+- ALWAYS expose `loading`/`error` refs from async composables; use `watchEffect` for reactive data fetching
+- PREFER `toValue()` to accept refs, getters, or plain values as input
+- PREFER splitting large composables by concern (e.g. `useCart` → `useAddToCart` + `useFetchCart`)
+- PREFER organizing code within composables as: state → metadata → methods → return
+- Keep composables as thin reactive wrappers; extract pure business logic to plain functions for testability
+- Only create composables when you need reactivity or lifecycle hooks — otherwise use plain utility functions
+- Composables manage state/logic, not UI side effects — expose state, let components handle presentation
+- Don't extract to shared `composables/` until a second consumer exists (inline → colocated → shared)
 
 ## Styling
 
-- ALWAYS use <style scoped> for component styles
+- ALWAYS use `<style scoped>`
 ```

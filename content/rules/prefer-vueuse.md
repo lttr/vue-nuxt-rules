@@ -15,7 +15,7 @@ Common composables and utilities include `useLocalStorage`, `onClickOutside`, `u
 ## Rule for AI agents
 
 ```
-PREFER VueUse composables and utility functions over custom implementations for common tasks like state management, DOM interactions, and browser APIs
+- PREFER VueUse composables over custom implementations for common browser/DOM/state tasks
 ```
 
 ## Eslint rule

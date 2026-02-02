@@ -9,7 +9,7 @@ Note: `defineModel()` requires Vue 3.4 or later. For projects using earlier vers
 ## Rule for AI agents
 
 ```
-- USE `defineModel()` for v-model implementations instead of manually defining props and emits (Vue 3.4+)
+- USE `defineModel()` for two-way binding instead of manual prop+emit pairs
 ```
 
 ## Eslint rule

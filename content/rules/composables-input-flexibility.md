@@ -26,7 +26,7 @@ The `MaybeRefOrGetter<T>` type represents values that can be `T`, `Ref<T>`, or `
 ## Rule for AI agents
 
 ```
-PREFER toValue() to normalize inputs - accept refs, getters, and plain values
+- PREFER `toValue()` to accept refs, getters, or plain values as input
 ```
 
 ## Eslint rule

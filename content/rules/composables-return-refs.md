@@ -30,7 +30,7 @@ If you need the state as a reactive object without destructuring, consumers can 
 ## Rule for AI agents
 
 ```
-ALWAYS return plain object with refs from composables, not reactive()
+- ALWAYS return a plain object of refs — never wrap return in `reactive()`
 ```
 
 ## Eslint rule

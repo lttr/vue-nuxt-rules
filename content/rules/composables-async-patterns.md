@@ -42,7 +42,7 @@ The `watchEffect()` automatically tracks `url` as a dependency and re-runs whene
 ## Rule for AI agents
 
 ```
-Use watchEffect for reactive data fetching; always expose loading/error state refs
+- ALWAYS expose `loading`/`error` refs from async composables; use `watchEffect` for reactive data fetching
 ```
 
 ## Eslint rule

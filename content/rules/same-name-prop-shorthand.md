@@ -7,7 +7,7 @@ This shorthand is similar to ES6 object property shorthand and is supported in V
 ## Rule for AI agents
 
 ```
-ALWAYS use shorthand syntax (`:propName`) when passing a prop with the same name as the variable, instead of the verbose form (`:propName="propName"`)
+- ALWAYS use same-name shorthand `:propName` instead of `:propName="propName"`
 ```
 
 ## Eslint rule

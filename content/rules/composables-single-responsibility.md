@@ -61,7 +61,7 @@ Each composable can be tested independently and reused in different contexts.
 ## Rule for AI agents
 
 ```
-Split monolithic composables by concern (useCart -> useAddToCart, useFetchCart, useRemoveFromCart)
+- PREFER splitting large composables by concern (e.g. `useCart` → `useAddToCart` + `useFetchCart`)
 ```
 
 ## Eslint rule

@@ -5,7 +5,7 @@ Prefer using `ref()` over `reactive()` for reactive state in Vue. While both are
 ## Rule for AI agents
 
 ```
-PREFER use `ref()` for reactive state instead of `reactive()` in Vue projects
+- PREFER `ref()` over `reactive()` for state
 ```
 
 ## Eslint rule

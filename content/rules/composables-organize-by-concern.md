@@ -43,7 +43,7 @@ function useUserProfile(userId: Ref<string>) {
 ## Rule for AI agents
 
 ```
-Group code by logical concern, not by Vue API type (don't cluster all computed together). Within each concern: state → metadata (loading/error) → methods → return.
+- PREFER organizing code within composables as: state → metadata → methods → return
 ```
 
 ## Eslint rule
