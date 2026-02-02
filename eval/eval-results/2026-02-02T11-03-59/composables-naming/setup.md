@@ -1,0 +1,68 @@
+# Setup
+
+- **Model**: claude-opus-4-5-20251101
+- **Rule file**: composables-naming.md
+- **Allowed tools**: Bash(*), Read, Write, Edit
+
+## Prompt
+
+```
+Create a Vue 3 composable that tracks whether the user is online
+or offline. Return the status.
+
+```
+
+## Full rule content
+
+````markdown
+# Use "use" prefix for composables
+
+Always prefix composable function names with "use" (e.g., `useMouse`, `useFetch`, `useCounter`). This convention clearly signals that a function is a composable and follows Vue ecosystem standards.
+
+The naming convention improves code discoverability, makes it immediately clear which functions require the setup context, and aligns with community standards including VueUse and Nuxt composables.
+
+### File naming
+
+Name composable files using camelCase with the `use` prefix: `useFeatureName.ts`. Keep one composable per file to maintain clarity and discoverability.
+
+Example:
+
+```typescript
+// Good - clear composable naming
+// file: useCounter.ts
+export function useCounter() {
+  const count = ref(0)
+  const increment = () => count.value++
+  return { count, increment }
+}
+
+// Bad - unclear function purpose
+export function counter() {
+  /* ... */
+}
+export function getCounter() {
+  /* ... */
+}
+```
+
+## Rule for AI agents
+
+```
+- ALWAYS prefix names with `use` (e.g. `useMouse`). One composable per file, named `useFeatureName.ts`
+```
+
+## Eslint rule
+
+No ESLint rule available
+
+## Source
+
+- https://vuejs.org/guide/reusability/composables.html#conventions-and-best-practices
+
+````
+
+## Extracted rule content
+
+````markdown
+- ALWAYS prefix names with `use` (e.g. `useMouse`). One composable per file, named `useFeatureName.ts`
+````

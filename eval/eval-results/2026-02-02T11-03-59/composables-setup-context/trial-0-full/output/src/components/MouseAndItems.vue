@@ -1,0 +1,42 @@
+<script setup>
+import { ref } from 'vue'
+import { useMouse } from '../composables/useMouse'
+import { useItemList } from '../composables/useItemList'
+
+// Both composables called synchronously in <script setup>
+const { x, y } = useMouse()
+const { items, count, addItem, removeItem } = useItemList(['Apple', 'Banana'])
+
+const newItem = ref('')
+
+function handleAdd() {
+  const trimmed = newItem.value.trim()
+  if (trimmed) {
+    addItem(trimmed)
+    newItem.value = ''
+  }
+}
+</script>
+
+<template>
+  <div class="container">
+    <section>
+      <h2>Mouse Position</h2>
+      <p>X: {{ x }} / Y: {{ y }}</p>
+    </section>
+
+    <section>
+      <h2>Item List ({{ count }})</h2>
+      <form @submit.prevent="handleAdd">
+        <input v-model="newItem" placeholder="New item..." />
+        <button type="submit">Add</button>
+      </form>
+      <ul>
+        <li v-for="(item, index) in items" :key="index">
+          {{ item }}
+          <button @click="removeItem(index)">Remove</button>
+        </li>
+      </ul>
+    </section>
+  </div>
+</template>
