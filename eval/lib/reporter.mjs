@@ -3,20 +3,28 @@ import { join } from "node:path"
 import { extractRule, getRulePath } from "./extract-rule.mjs"
 
 /**
- * Classify a rule based on 3-variant eval results.
+ * Classify a rule based on eval results.
+ * Handles both 2-variant (baseline, extracted) and 3-variant (+ full) modes.
  */
 function classify(evalResult) {
   const trials = evalResult.trials
+  const hasFull = trials[0]?.full != null
 
   const baselineRate = passRate(trials, "baseline")
-  const fullRate = passRate(trials, "full")
   const extractedRate = passRate(trials, "extracted")
+  const fullRate = hasFull ? passRate(trials, "full") : null
 
   if (baselineRate === 1) return "already-known"
-  if (fullRate <= baselineRate && extractedRate <= baselineRate) return "no-improvement"
-  if (fullRate > extractedRate) return "full-better"
-  if (extractedRate > fullRate) return "extracted-better"
-  return "both-help"
+
+  if (hasFull) {
+    if (fullRate <= baselineRate && extractedRate <= baselineRate) return "no-improvement"
+    if (fullRate > extractedRate) return "full-better"
+    if (extractedRate > fullRate) return "extracted-better"
+    return "both-help"
+  } else {
+    if (extractedRate <= baselineRate) return "no-improvement"
+    return "extracted-better"
+  }
 }
 
 function passRate(trials, variant) {
@@ -49,12 +57,13 @@ function fractionStr(trials, variant) {
  * Generate markdown report.
  */
 export async function generateReport(allResults, resultsDir) {
+  const hasFull = allResults[0]?.trials[0]?.full != null
   const summary = allResults.map((r) => ({
     rule: r.rule,
     category: r.category,
     classification: classify(r),
     baseline: fractionStr(r.trials, "baseline"),
-    full: fractionStr(r.trials, "full"),
+    full: hasFull ? fractionStr(r.trials, "full") : null,
     extracted: fractionStr(r.trials, "extracted"),
   }))
 
@@ -86,6 +95,7 @@ export async function generateReport(allResults, resultsDir) {
 
 function buildMarkdown(summary, allResults) {
   const lines = ["# Eval Report\n"]
+  const hasFull = summary[0]?.full != null
 
   // Summary counts
   const counts = {
@@ -99,16 +109,25 @@ function buildMarkdown(summary, allResults) {
 
   lines.push(`## Summary\n`)
   lines.push(`- **Already Known**: ${counts["already-known"]}`)
-  lines.push(`- **Full Better**: ${counts["full-better"]}`)
+  if (hasFull) {
+    lines.push(`- **Full Better**: ${counts["full-better"]}`)
+  }
   lines.push(`- **Extracted Better**: ${counts["extracted-better"]}`)
-  lines.push(`- **Both Help**: ${counts["both-help"]}`)
+  if (hasFull) {
+    lines.push(`- **Both Help**: ${counts["both-help"]}`)
+  }
   lines.push(`- **No Improvement**: ${counts["no-improvement"]}`)
   lines.push("")
 
   // Table
   lines.push("## Results\n")
-  lines.push("| Rule | Category | Classification | Baseline | Full | Extracted |")
-  lines.push("|------|----------|---------------|----------|------|-----------|")
+  if (hasFull) {
+    lines.push("| Rule | Category | Classification | Baseline | Full | Extracted |")
+    lines.push("|------|----------|---------------|----------|------|-----------|")
+  } else {
+    lines.push("| Rule | Category | Classification | Baseline | Extracted |")
+    lines.push("|------|----------|---------------|----------|-----------|")
+  }
 
   for (const s of summary) {
     const icon = {
@@ -118,9 +137,15 @@ function buildMarkdown(summary, allResults) {
       "already-known": "⚪",
       "no-improvement": "🔴",
     }[s.classification]
-    lines.push(
-      `| ${s.rule} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.full} | ${s.extracted} |`,
-    )
+    if (hasFull) {
+      lines.push(
+        `| ${s.rule} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.full} | ${s.extracted} |`,
+      )
+    } else {
+      lines.push(
+        `| ${s.rule} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.extracted} |`,
+      )
+    }
   }
 
   lines.push("")
@@ -132,9 +157,12 @@ function buildMarkdown(summary, allResults) {
   if (recommended.length > 0) {
     lines.push("## Recommendations\n")
     for (const s of recommended) {
-      const variant =
-        s.classification === "full-better" ? "full" : "extracted"
-      lines.push(`- **${s.rule}** → use **${variant}**`)
+      if (hasFull) {
+        const variant = s.classification === "full-better" ? "full" : "extracted"
+        lines.push(`- **${s.rule}** → use **${variant}**`)
+      } else {
+        lines.push(`- **${s.rule}** → use rule`)
+      }
     }
     lines.push("")
   }
@@ -145,20 +173,31 @@ function buildMarkdown(summary, allResults) {
     lines.push(`### ${result.rule}\n`)
     for (const trial of result.trials) {
       lines.push(`**Trial ${trial.index}**\n`)
-      lines.push("| Check | Baseline | Full | Extracted |")
-      lines.push("|-------|----------|------|-----------|")
+      if (hasFull) {
+        lines.push("| Check | Baseline | Full | Extracted |")
+        lines.push("|-------|----------|------|-----------|")
+      } else {
+        lines.push("| Check | Baseline | Extracted |")
+        lines.push("|-------|----------|-----------|")
+      }
 
       const baseChecks = trial.baseline.checks
-      const fullChecks = trial.full.checks
+      const fullChecks = trial.full?.checks
       const extractedChecks = trial.extracted.checks
 
       for (let i = 0; i < baseChecks.length; i++) {
         const b = baseChecks[i]
-        const f = fullChecks[i]
         const e = extractedChecks[i]
-        lines.push(
-          `| ${b.id} | ${b.passed ? "✅" : "❌"} ${b.detail} | ${f.passed ? "✅" : "❌"} ${f.detail} | ${e.passed ? "✅" : "❌"} ${e.detail} |`,
-        )
+        if (hasFull) {
+          const f = fullChecks[i]
+          lines.push(
+            `| ${b.id} | ${b.passed ? "✅" : "❌"} ${b.detail} | ${f.passed ? "✅" : "❌"} ${f.detail} | ${e.passed ? "✅" : "❌"} ${e.detail} |`,
+          )
+        } else {
+          lines.push(
+            `| ${b.id} | ${b.passed ? "✅" : "❌"} ${b.detail} | ${e.passed ? "✅" : "❌"} ${e.detail} |`,
+          )
+        }
       }
 
       // Summarize differences vs baseline
@@ -168,12 +207,14 @@ function buildMarkdown(summary, allResults) {
       const extractedRegressed = []
       for (let i = 0; i < baseChecks.length; i++) {
         const b = baseChecks[i]
-        const f = fullChecks[i]
         const e = extractedChecks[i]
-        if (!b.passed && f.passed) fullImproved.push(b.id)
-        if (b.passed && !f.passed) fullRegressed.push(b.id)
         if (!b.passed && e.passed) extractedImproved.push(b.id)
         if (b.passed && !e.passed) extractedRegressed.push(b.id)
+        if (hasFull) {
+          const f = fullChecks[i]
+          if (!b.passed && f.passed) fullImproved.push(b.id)
+          if (b.passed && !f.passed) fullRegressed.push(b.id)
+        }
       }
       lines.push("")
       const hasChanges =

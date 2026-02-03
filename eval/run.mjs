@@ -9,9 +9,9 @@ import { generateReport } from "./lib/reporter.mjs"
 const { values: opts } = parseArgs({
   options: {
     eval: { type: "string" },
-    category: { type: "string" },
     trials: { type: "string" },
     model: { type: "string" },
+    full: { type: "boolean", default: false },
     "skip-generation": { type: "boolean", default: false },
     "results-dir": { type: "string" },
   },
@@ -26,7 +26,6 @@ await mkdir(RESULTS_DIR, { recursive: true })
 
 const filter = {
   eval: opts.eval,
-  category: opts.category,
 }
 
 const evals = await loadEvals(EVALS_DIR, filter)
@@ -45,8 +44,9 @@ for (const evalDef of evals) {
   console.log(`▸ ${slug}`)
 
   const result = await runEval(evalDef, {
-    trials: opts.trials ? parseInt(opts.trials) : undefined,
+    trials: opts.trials ? parseInt(opts.trials) : 2,
     model: opts.model,
+    includeFull: opts.full,
     skipGeneration: opts["skip-generation"],
     resultsDir: RESULTS_DIR,
   })
@@ -59,15 +59,17 @@ for (const evalDef of evals) {
   const baselinePass = result.trials
     .flatMap((t) => t.baseline.checks)
     .filter((c) => c.passed).length
-  const fullPass = result.trials
-    .flatMap((t) => t.full.checks)
-    .filter((c) => c.passed).length
   const extractedPass = result.trials
     .flatMap((t) => t.extracted.checks)
     .filter((c) => c.passed).length
-  console.log(
-    `  baseline: ${baselinePass}/${total}  full: ${fullPass}/${total}  extracted: ${extractedPass}/${total}\n`,
-  )
+  let summary = `  baseline: ${baselinePass}/${total}  extracted: ${extractedPass}/${total}`
+  if (opts.full) {
+    const fullPass = result.trials
+      .flatMap((t) => t.full.checks)
+      .filter((c) => c.passed).length
+    summary += `  full: ${fullPass}/${total}`
+  }
+  console.log(summary + "\n")
 }
 
 const { summary } = await generateReport(allResults, RESULTS_DIR)
@@ -75,14 +77,26 @@ const { summary } = await generateReport(allResults, RESULTS_DIR)
 // Print summary table
 console.log("\n=== Summary ===\n")
 const pad = (s, n) => s.padEnd(n)
-console.log(
-  `${pad("Rule", 40)} ${pad("Classification", 20)} ${pad("Baseline", 10)} ${pad("Full", 10)} Extracted`,
-)
-console.log("-".repeat(95))
-for (const s of summary) {
+if (opts.full) {
   console.log(
-    `${pad(s.rule, 40)} ${pad(s.classification, 20)} ${pad(s.baseline, 10)} ${pad(s.full, 10)} ${s.extracted}`,
+    `${pad("Rule", 40)} ${pad("Classification", 20)} ${pad("Baseline", 10)} ${pad("Full", 10)} Extracted`,
   )
+  console.log("-".repeat(95))
+  for (const s of summary) {
+    console.log(
+      `${pad(s.rule, 40)} ${pad(s.classification, 20)} ${pad(s.baseline, 10)} ${pad(s.full || "-", 10)} ${s.extracted}`,
+    )
+  }
+} else {
+  console.log(
+    `${pad("Rule", 40)} ${pad("Classification", 20)} ${pad("Baseline", 10)} Extracted`,
+  )
+  console.log("-".repeat(75))
+  for (const s of summary) {
+    console.log(
+      `${pad(s.rule, 40)} ${pad(s.classification, 20)} ${pad(s.baseline, 10)} ${s.extracted}`,
+    )
+  }
 }
 
 console.log(`\nReport: ${RESULTS_DIR}/report.md`)

@@ -224,10 +224,12 @@ function formatCombinedSetupMd(fullSetup, extractedSetup) {
 
 /**
  * Run a single eval definition (all trials).
- * Always runs 3 variants: baseline, full, extracted.
+ * By default runs 2 variants: baseline, extracted.
+ * Pass includeFull: true to also run with full rule text.
  */
 export async function runEval(evalDef, opts = {}) {
-  const trials = opts.trials ?? evalDef.trials ?? 1
+  const trials = opts.trials ?? evalDef.trials ?? 2
+  const includeFull = opts.includeFull ?? false
 
   const results = {
     name: evalDef.name,
@@ -237,7 +239,8 @@ export async function runEval(evalDef, opts = {}) {
   }
 
   for (let t = 0; t < trials; t++) {
-    const trial = { index: t, baseline: {}, full: {}, extracted: {} }
+    const trial = { index: t, baseline: {}, extracted: {} }
+    if (includeFull) trial.full = {}
 
     if (!opts.skipGeneration) {
       // Generate baseline (no rule)
@@ -245,10 +248,12 @@ export async function runEval(evalDef, opts = {}) {
       trial.baseline.code = baselineResult.code
       trial.baseline.setup = baselineResult.setup
 
-      // Generate with full rule (entire markdown)
-      const fullResult = await generate(evalDef.prompt, evalDef.rule, "full", opts)
-      trial.full.code = fullResult.code
-      trial.full.setup = fullResult.setup
+      // Generate with full rule (entire markdown) - optional
+      if (includeFull) {
+        const fullResult = await generate(evalDef.prompt, evalDef.rule, "full", opts)
+        trial.full.code = fullResult.code
+        trial.full.setup = fullResult.setup
+      }
 
       // Generate with extracted rule (AI agent block only)
       const extractedResult = await generate(evalDef.prompt, evalDef.rule, "extracted", opts)
@@ -259,21 +264,25 @@ export async function runEval(evalDef, opts = {}) {
       const dir = opts.resultsDir
       const slug = evalDef.name
       trial.baseline.code = await loadVariant(dir, slug, `trial-${t}-baseline`)
-      trial.full.code = await loadVariant(dir, slug, `trial-${t}-full`)
+      if (includeFull) {
+        trial.full.code = await loadVariant(dir, slug, `trial-${t}-full`)
+      }
       trial.extracted.code = await loadVariant(dir, slug, `trial-${t}-extracted`)
     }
 
-    // Evaluate all three
+    // Evaluate
     trial.baseline.checks = await evaluate(
       trial.baseline.code,
       evalDef.checks,
       opts,
     )
-    trial.full.checks = await evaluate(
-      trial.full.code,
-      evalDef.checks,
-      opts,
-    )
+    if (includeFull) {
+      trial.full.checks = await evaluate(
+        trial.full.code,
+        evalDef.checks,
+        opts,
+      )
+    }
     trial.extracted.checks = await evaluate(
       trial.extracted.code,
       evalDef.checks,
@@ -359,11 +368,15 @@ export async function saveResults(evalResult, resultsDir) {
 
   for (const trial of evalResult.trials) {
     const i = trial.index
-    for (const [variant, variantName] of [
+    const variants = [
       ["baseline", `trial-${i}-baseline`],
-      ["full", `trial-${i}-full`],
       ["extracted", `trial-${i}-extracted`],
-    ]) {
+    ]
+    if (trial.full) {
+      variants.splice(1, 0, ["full", `trial-${i}-full`])
+    }
+
+    for (const [variant, variantName] of variants) {
       const variantDir = join(dir, variantName)
       await mkdir(variantDir, { recursive: true })
 
@@ -396,7 +409,6 @@ export async function loadEvals(evalsDir, filter = {}) {
     const name = file.replace(".yaml", "")
 
     if (filter.eval && name !== filter.eval) continue
-    if (filter.category && def.category !== filter.category) continue
 
     def.name = name
     evals.push(def)
