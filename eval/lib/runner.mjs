@@ -364,6 +364,8 @@ export async function saveResults(evalResult, resultsDir) {
     await writeFile(join(dir, "setup.md"), formatCombinedSetupMd(fullSetup, extractedSetup))
   } else if (fullSetup) {
     await writeFile(join(dir, "setup.md"), formatSetupMd(fullSetup))
+  } else if (extractedSetup) {
+    await writeFile(join(dir, "setup.md"), formatSetupMd(extractedSetup))
   }
 
   for (const trial of evalResult.trials) {
