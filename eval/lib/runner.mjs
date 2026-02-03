@@ -134,7 +134,7 @@ async function generate(prompt, ruleFile, ruleMode, opts) {
     } catch {}
   }
 
-  const allowedTools = ["Bash(*)", "Read", "Write", "Edit"]
+  const allowedTools = ["Read", "Write", "Edit"]
 
   const setup = {
     model,
