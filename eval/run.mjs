@@ -79,22 +79,22 @@ console.log("\n=== Summary ===\n")
 const pad = (s, n) => s.padEnd(n)
 if (opts.full) {
   console.log(
-    `${pad("Rule", 40)} ${pad("Classification", 20)} ${pad("Baseline", 10)} ${pad("Full", 10)} Extracted`,
+    `${pad("Name", 40)} ${pad("Classification", 20)} ${pad("Baseline", 10)} ${pad("Full", 10)} Extracted`,
   )
   console.log("-".repeat(95))
   for (const s of summary) {
     console.log(
-      `${pad(s.rule, 40)} ${pad(s.classification, 20)} ${pad(s.baseline, 10)} ${pad(s.full || "-", 10)} ${s.extracted}`,
+      `${pad(s.name, 40)} ${pad(s.classification, 20)} ${pad(s.baseline, 10)} ${pad(s.full || "-", 10)} ${s.extracted}`,
     )
   }
 } else {
   console.log(
-    `${pad("Rule", 40)} ${pad("Classification", 20)} ${pad("Baseline", 10)} Extracted`,
+    `${pad("Name", 40)} ${pad("Classification", 20)} ${pad("Baseline", 10)} Extracted`,
   )
   console.log("-".repeat(75))
   for (const s of summary) {
     console.log(
-      `${pad(s.rule, 40)} ${pad(s.classification, 20)} ${pad(s.baseline, 10)} ${s.extracted}`,
+      `${pad(s.name, 40)} ${pad(s.classification, 20)} ${pad(s.baseline, 10)} ${s.extracted}`,
     )
   }
 }

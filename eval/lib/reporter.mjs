@@ -54,13 +54,22 @@ function fractionStr(trials, variant) {
 }
 
 /**
+ * Derive eval type from name suffix.
+ */
+function evalType(name) {
+  return name.endsWith("-refactor") ? "refactor" : "generation"
+}
+
+/**
  * Generate markdown report.
  */
 export async function generateReport(allResults, resultsDir) {
   const hasFull = allResults[0]?.trials[0]?.full != null
   const summary = allResults.map((r) => ({
+    name: r.name,
     rule: r.rule,
-    category: r.category,
+    type: evalType(r.name),
+    category: r.category || "misc",
     classification: classify(r),
     baseline: fractionStr(r.trials, "baseline"),
     full: hasFull ? fractionStr(r.trials, "full") : null,
@@ -122,11 +131,11 @@ function buildMarkdown(summary, allResults) {
   // Table
   lines.push("## Results\n")
   if (hasFull) {
-    lines.push("| Rule | Category | Classification | Baseline | Full | Extracted |")
-    lines.push("|------|----------|---------------|----------|------|-----------|")
+    lines.push("| Name | Type | Category | Classification | Baseline | Full | Extracted |")
+    lines.push("|------|------|----------|---------------|----------|------|-----------|")
   } else {
-    lines.push("| Rule | Category | Classification | Baseline | Extracted |")
-    lines.push("|------|----------|---------------|----------|-----------|")
+    lines.push("| Name | Type | Category | Classification | Baseline | Extracted |")
+    lines.push("|------|------|----------|---------------|----------|-----------|")
   }
 
   for (const s of summary) {
@@ -139,11 +148,11 @@ function buildMarkdown(summary, allResults) {
     }[s.classification]
     if (hasFull) {
       lines.push(
-        `| ${s.rule} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.full} | ${s.extracted} |`,
+        `| ${s.name} | ${s.type} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.full} | ${s.extracted} |`,
       )
     } else {
       lines.push(
-        `| ${s.rule} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.extracted} |`,
+        `| ${s.name} | ${s.type} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.extracted} |`,
       )
     }
   }
@@ -159,9 +168,9 @@ function buildMarkdown(summary, allResults) {
     for (const s of recommended) {
       if (hasFull) {
         const variant = s.classification === "full-better" ? "full" : "extracted"
-        lines.push(`- **${s.rule}** → use **${variant}**`)
+        lines.push(`- **${s.name}** → use **${variant}**`)
       } else {
-        lines.push(`- **${s.rule}** → use rule`)
+        lines.push(`- **${s.name}** → use rule`)
       }
     }
     lines.push("")
@@ -170,7 +179,7 @@ function buildMarkdown(summary, allResults) {
   // Detailed breakdown
   lines.push("## Details\n")
   for (const result of allResults) {
-    lines.push(`### ${result.rule}\n`)
+    lines.push(`### ${result.name}\n`)
     for (const trial of result.trials) {
       lines.push(`**Trial ${trial.index}**\n`)
       if (hasFull) {
@@ -257,7 +266,7 @@ async function buildRecommendedRules(recommended) {
   for (const [category, rules] of byCategory) {
     lines.push(`## ${category}\n`)
     for (const s of rules) {
-      lines.push(`### ${s.rule}\n`)
+      lines.push(`### ${s.name}\n`)
       const useExtracted = s.classification !== "full-better"
       if (useExtracted) {
         const text = await extractRule(s.rule)
