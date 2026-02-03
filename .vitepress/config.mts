@@ -61,6 +61,11 @@ export default defineConfig({
             link: "/rules/prefer-ref-over-reactive",
           },
           { text: "Prefer VueUse", link: "/rules/prefer-vueuse" },
+          {
+            text: "No Side Effects in Computed",
+            link: "/rules/no-side-effects-in-computed",
+          },
+          { text: "No Mutating Props", link: "/rules/no-mutating-props" },
         ],
       },
       {

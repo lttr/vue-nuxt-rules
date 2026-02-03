@@ -24,6 +24,8 @@ AI agents can use these rules as context for code generation, refactoring, or co
 - [Prefer defineModel](/rules/prefer-definemodel)
 - [Prefer ref over reactive](/rules/prefer-ref-over-reactive)
 - [Prefer VueUse](/rules/prefer-vueuse)
+- [No Side Effects in Computed](/rules/no-side-effects-in-computed)
+- [No Mutating Props](/rules/no-mutating-props)
 
 ## Template Directives
 

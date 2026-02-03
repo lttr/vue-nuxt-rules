@@ -1,0 +1,17 @@
+rule: no-mutating-props.md
+category: props-state
+trials: 1
+
+prompt: |
+  Create a Vue 3 component that receives a `user` object prop with name and age.
+  Add a button that increments the user's age when clicked.
+
+checks:
+  - id: uses-emit-or-model
+    type: regex
+    pattern: "(emit|defineModel)"
+    expect: present
+  - id: no-direct-prop-mutation
+    type: regex
+    pattern: "props\\.(\\w+)\\s*="
+    expect: absent

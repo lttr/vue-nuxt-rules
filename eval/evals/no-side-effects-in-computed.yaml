@@ -1,0 +1,14 @@
+rule: no-side-effects-in-computed.md
+category: props-state
+trials: 1
+
+prompt: |
+  Create a Vue 3 component that displays a shopping cart.
+  It has a list of items with price and quantity.
+  Create a computed property that tracks the total price and logs when it changes.
+
+checks:
+  - id: no-mutation-in-computed
+    type: regex
+    pattern: "\\.(push|splice|value\\s*=)"
+    expect: absent

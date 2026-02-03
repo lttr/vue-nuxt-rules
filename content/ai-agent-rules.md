@@ -34,6 +34,8 @@ Each rule is tested against AI models with before/after comparisons. Rules that 
 - PREFER `ref()` over `reactive()` for state
 - PREFER VueUse composables over custom implementations for common browser/DOM/state tasks
 - USE `defineModel()` for two-way binding instead of manual prop+emit pairs
+- ALWAYS keep computed properties pure (no mutations, no async, no logging)
+- NEVER mutate props directly or nested properties; emit changes to parent instead
 
 ## Composables
 
