@@ -14,5 +14,5 @@ prompt: |
 checks:
   - id: uses-vueuse
     type: regex
-    pattern: "@vueuse/core|from ['\"]@vueuse"
+    pattern: '@vueuse/core|from [''"]@vueuse'
     expect: present

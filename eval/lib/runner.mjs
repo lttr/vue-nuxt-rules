@@ -1,4 +1,12 @@
-import { readFile, mkdir, mkdtemp, writeFile, readdir, cp, rm } from "node:fs/promises"
+import {
+  readFile,
+  mkdir,
+  mkdtemp,
+  writeFile,
+  readdir,
+  cp,
+  rm,
+} from "node:fs/promises"
 import { join, dirname } from "node:path"
 import { spawn } from "node:child_process"
 import { tmpdir, homedir } from "node:os"
@@ -250,13 +258,23 @@ export async function runEval(evalDef, opts = {}) {
 
       // Generate with full rule (entire markdown) - optional
       if (includeFull) {
-        const fullResult = await generate(evalDef.prompt, evalDef.rule, "full", opts)
+        const fullResult = await generate(
+          evalDef.prompt,
+          evalDef.rule,
+          "full",
+          opts,
+        )
         trial.full.code = fullResult.code
         trial.full.setup = fullResult.setup
       }
 
       // Generate with extracted rule (AI agent block only)
-      const extractedResult = await generate(evalDef.prompt, evalDef.rule, "extracted", opts)
+      const extractedResult = await generate(
+        evalDef.prompt,
+        evalDef.rule,
+        "extracted",
+        opts,
+      )
       trial.extracted.code = extractedResult.code
       trial.extracted.setup = extractedResult.setup
     } else {
@@ -267,7 +285,11 @@ export async function runEval(evalDef, opts = {}) {
       if (includeFull) {
         trial.full.code = await loadVariant(dir, slug, `trial-${t}-full`)
       }
-      trial.extracted.code = await loadVariant(dir, slug, `trial-${t}-extracted`)
+      trial.extracted.code = await loadVariant(
+        dir,
+        slug,
+        `trial-${t}-extracted`,
+      )
     }
 
     // Evaluate
@@ -277,11 +299,7 @@ export async function runEval(evalDef, opts = {}) {
       opts,
     )
     if (includeFull) {
-      trial.full.checks = await evaluate(
-        trial.full.code,
-        evalDef.checks,
-        opts,
-      )
+      trial.full.checks = await evaluate(trial.full.code, evalDef.checks, opts)
     }
     trial.extracted.checks = await evaluate(
       trial.extracted.code,
@@ -321,7 +339,12 @@ async function loadVariant(resultsDir, slug, variantName) {
   }
 
   // Legacy: files directly in variant dir (skip metadata files)
-  const metaFiles = new Set(["checks.json", "setup.json", "checks.md", "setup.md"])
+  const metaFiles = new Set([
+    "checks.json",
+    "setup.json",
+    "checks.md",
+    "setup.md",
+  ])
   try {
     const files = {}
     const entries = await readdir(variantDir, { recursive: true })
@@ -361,7 +384,10 @@ export async function saveResults(evalResult, resultsDir) {
   const fullSetup = firstTrial?.full?.setup
   const extractedSetup = firstTrial?.extracted?.setup
   if (fullSetup && extractedSetup) {
-    await writeFile(join(dir, "setup.md"), formatCombinedSetupMd(fullSetup, extractedSetup))
+    await writeFile(
+      join(dir, "setup.md"),
+      formatCombinedSetupMd(fullSetup, extractedSetup),
+    )
   } else if (fullSetup) {
     await writeFile(join(dir, "setup.md"), formatSetupMd(fullSetup))
   } else if (extractedSetup) {

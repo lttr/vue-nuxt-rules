@@ -40,11 +40,11 @@ node run.mjs --skip-generation --results-dir results/2026-01-29T08-00-16
 
 Each eval runs in an isolated temp environment with credentials copied from `~/.claude/`. Rules are delivered via Claude Code's native `.claude/rules/` mechanism.
 
-| Variant     | Description                                           |
-| ----------- | ----------------------------------------------------- |
-| `baseline`  | No rule injected (control)                            |
-| `extracted` | Only the "Rule for AI agents" code block (default)    |
-| `full`      | Entire rule `.md` file (opt-in via `--full` flag)     |
+| Variant     | Description                                        |
+| ----------- | -------------------------------------------------- |
+| `baseline`  | No rule injected (control)                         |
+| `extracted` | Only the "Rule for AI agents" code block (default) |
+| `full`      | Entire rule `.md` file (opt-in via `--full` flag)  |
 
 ## Eval Definition Format
 

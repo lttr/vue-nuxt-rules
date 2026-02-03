@@ -17,7 +17,8 @@ function classify(evalResult) {
   if (baselineRate === 1) return "already-known"
 
   if (hasFull) {
-    if (fullRate <= baselineRate && extractedRate <= baselineRate) return "no-improvement"
+    if (fullRate <= baselineRate && extractedRate <= baselineRate)
+      return "no-improvement"
     if (fullRate > extractedRate) return "full-better"
     if (extractedRate > fullRate) return "extracted-better"
     return "both-help"
@@ -92,7 +93,9 @@ export async function generateReport(allResults, resultsDir) {
 
   // Recommended rules document
   const recommended = summary.filter(
-    (s) => s.classification !== "already-known" && s.classification !== "no-improvement",
+    (s) =>
+      s.classification !== "already-known" &&
+      s.classification !== "no-improvement",
   )
   if (recommended.length > 0) {
     const rulesDoc = await buildRecommendedRules(recommended)
@@ -131,11 +134,19 @@ function buildMarkdown(summary, allResults) {
   // Table
   lines.push("## Results\n")
   if (hasFull) {
-    lines.push("| Name | Type | Category | Classification | Baseline | Full | Extracted |")
-    lines.push("|------|------|----------|---------------|----------|------|-----------|")
+    lines.push(
+      "| Name | Type | Category | Classification | Baseline | Full | Extracted |",
+    )
+    lines.push(
+      "|------|------|----------|---------------|----------|------|-----------|",
+    )
   } else {
-    lines.push("| Name | Type | Category | Classification | Baseline | Extracted |")
-    lines.push("|------|------|----------|---------------|----------|-----------|")
+    lines.push(
+      "| Name | Type | Category | Classification | Baseline | Extracted |",
+    )
+    lines.push(
+      "|------|------|----------|---------------|----------|-----------|",
+    )
   }
 
   for (const s of summary) {
@@ -161,13 +172,16 @@ function buildMarkdown(summary, allResults) {
 
   // Recommendations
   const recommended = summary.filter(
-    (s) => s.classification !== "already-known" && s.classification !== "no-improvement",
+    (s) =>
+      s.classification !== "already-known" &&
+      s.classification !== "no-improvement",
   )
   if (recommended.length > 0) {
     lines.push("## Recommendations\n")
     for (const s of recommended) {
       if (hasFull) {
-        const variant = s.classification === "full-better" ? "full" : "extracted"
+        const variant =
+          s.classification === "full-better" ? "full" : "extracted"
         lines.push(`- **${s.name}** → use **${variant}**`)
       } else {
         lines.push(`- **${s.name}** → use rule`)
@@ -238,9 +252,13 @@ function buildMarkdown(summary, allResults) {
         if (fullRegressed.length > 0)
           lines.push(`🔴 **Full regressed**: ${fullRegressed.join(", ")}`)
         if (extractedImproved.length > 0)
-          lines.push(`🔵 **Extracted improved**: ${extractedImproved.join(", ")}`)
+          lines.push(
+            `🔵 **Extracted improved**: ${extractedImproved.join(", ")}`,
+          )
         if (extractedRegressed.length > 0)
-          lines.push(`🔴 **Extracted regressed**: ${extractedRegressed.join(", ")}`)
+          lines.push(
+            `🔴 **Extracted regressed**: ${extractedRegressed.join(", ")}`,
+          )
       } else if (baseChecks.every((c) => c.passed)) {
         lines.push(`⚪ **No difference** — all passed`)
       } else {
