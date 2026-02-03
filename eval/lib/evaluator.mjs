@@ -69,13 +69,21 @@ function formatForPrompt(codeMap) {
  */
 export async function evaluate(codeMap, checks, opts = {}) {
   const results = []
+  const aiChecks = []
 
+  // Run regex checks immediately, collect AI checks for batching
   for (const check of checks) {
     if (check.type === "regex") {
       results.push(evalRegex(codeMap, check))
     } else if (check.type === "ai-judge") {
-      results.push(await evalAiJudge(codeMap, check, opts))
+      aiChecks.push(check)
     }
+  }
+
+  // Batch AI checks into single call
+  if (aiChecks.length > 0) {
+    const aiResults = await evalAiJudgeBatch(codeMap, aiChecks, opts)
+    results.push(...aiResults)
   }
 
   return results
@@ -96,9 +104,16 @@ function evalRegex(codeMap, check) {
   }
 }
 
-async function evalAiJudge(codeMap, check, opts) {
-  const model = opts.model || "claude-sonnet-4-20250514"
+/**
+ * Batch multiple AI judge checks into a single Claude call.
+ */
+async function evalAiJudgeBatch(codeMap, checks, opts) {
+  const model = opts.judgeModel || "claude-sonnet-4-20250514"
   const codeBlock = formatForPrompt(codeMap)
+
+  const criteriaList = checks
+    .map((c, i) => `${i + 1}. [${c.id}] ${c.criteria}`)
+    .join("\n")
 
   const prompt = `You are evaluating Vue 3 / TypeScript code quality.
 
@@ -106,9 +121,14 @@ CODE:
 ${codeBlock}
 
 CRITERIA:
-${check.criteria}
+${criteriaList}
 
-Respond with exactly one line: PASS or FAIL followed by a brief reason.`
+For each criterion, respond with exactly one line in format:
+<number>: PASS|FAIL - brief reason
+
+Example:
+1: PASS - uses defineModel correctly
+2: FAIL - missing type annotation`
 
   try {
     const stdout = await spawnClaude([
@@ -121,19 +141,36 @@ Respond with exactly one line: PASS or FAIL followed by a brief reason.`
     ])
 
     const output = stdout.trim()
-    const passed = output.toUpperCase().startsWith("PASS")
-    return {
-      id: check.id,
-      type: "ai-judge",
-      passed,
-      detail: output,
-    }
+    const lines = output.split("\n").filter((l) => l.trim())
+
+    // Parse results, fall back to FAIL if parsing fails
+    return checks.map((check, i) => {
+      const lineNum = i + 1
+      const line = lines.find((l) => l.startsWith(`${lineNum}:`))
+      if (line) {
+        const passed = line.toUpperCase().includes("PASS")
+        return { id: check.id, type: "ai-judge", passed, detail: line }
+      }
+      return {
+        id: check.id,
+        type: "ai-judge",
+        passed: false,
+        detail: `Failed to parse response for criterion ${lineNum}`,
+      }
+    })
   } catch (err) {
-    return {
+    // On error, mark all checks as failed
+    return checks.map((check) => ({
       id: check.id,
       type: "ai-judge",
       passed: false,
       detail: `AI judge error: ${err.message}`,
-    }
+    }))
   }
+}
+
+// Keep single check function for compatibility
+async function evalAiJudge(codeMap, check, opts) {
+  const results = await evalAiJudgeBatch(codeMap, [check], opts)
+  return results[0]
 }

@@ -13,6 +13,7 @@ import { tmpdir, homedir } from "node:os"
 import { parse as parseYaml } from "yaml"
 import { extractRule, getRulePath } from "./extract-rule.mjs"
 import { evaluate } from "./evaluator.mjs"
+import { shouldSkipBaseline } from "./cache.mjs"
 
 /**
  * Create an isolated temp environment for running claude.
@@ -89,9 +90,21 @@ function spawnClaude(args, { timeout = 180_000, env, cwd } = {}) {
   })
 }
 
+/** Directories/files to skip when reading workspace output */
+const SKIP_PATTERNS = new Set([
+  "node_modules",
+  ".git",
+  "dist",
+  ".nuxt",
+  ".output",
+  "package-lock.json",
+  "pnpm-lock.yaml",
+  "yarn.lock",
+])
+
 /**
  * Recursively read all files from a directory into a filename → content map.
- * Skips hidden directories (.claude, etc).
+ * Skips hidden directories (.claude, etc) and bloat (node_modules, etc).
  */
 async function readWorkspaceFiles(dir) {
   const files = {}
@@ -103,6 +116,7 @@ async function readWorkspaceFiles(dir) {
   }
   for (const entry of entries) {
     if (entry.name.startsWith(".")) continue
+    if (SKIP_PATTERNS.has(entry.name)) continue
     const fullPath = join(dir, entry.name)
     if (entry.isDirectory()) {
       const nested = await readWorkspaceFiles(fullPath)
@@ -234,16 +248,20 @@ function formatCombinedSetupMd(fullSetup, extractedSetup) {
  * Run a single eval definition (all trials).
  * By default runs 2 variants: baseline, extracted.
  * Pass includeFull: true to also run with full rule text.
+ * Pass cache: object to enable adaptive trial counts and baseline skipping.
  */
 export async function runEval(evalDef, opts = {}) {
   const trials = opts.trials ?? evalDef.trials ?? 2
   const includeFull = opts.includeFull ?? false
+  const cache = opts.cache || {}
+  const skipBaseline = shouldSkipBaseline(evalDef.name, cache)
 
   const results = {
     name: evalDef.name,
     rule: evalDef.rule,
     category: evalDef.category,
     trials: [],
+    skippedBaseline: skipBaseline,
   }
 
   for (let t = 0; t < trials; t++) {
@@ -251,10 +269,19 @@ export async function runEval(evalDef, opts = {}) {
     if (includeFull) trial.full = {}
 
     if (!opts.skipGeneration) {
-      // Generate baseline (no rule)
-      const baselineResult = await generate(evalDef.prompt, null, null, opts)
-      trial.baseline.code = baselineResult.code
-      trial.baseline.setup = baselineResult.setup
+      // Generate baseline (no rule) - skip if already-known
+      if (skipBaseline) {
+        trial.baseline.code = {}
+        trial.baseline.setup = {
+          model: opts.model,
+          prompt: evalDef.prompt,
+          skipped: true,
+        }
+      } else {
+        const baselineResult = await generate(evalDef.prompt, null, null, opts)
+        trial.baseline.code = baselineResult.code
+        trial.baseline.setup = baselineResult.setup
+      }
 
       // Generate with full rule (entire markdown) - optional
       if (includeFull) {

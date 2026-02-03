@@ -55,6 +55,25 @@ function fractionStr(trials, variant) {
 }
 
 /**
+ * Calculate flakiness: variance in per-trial pass rates.
+ * Returns value 0-1 where 0 = consistent, >0.2 = flaky.
+ */
+function calcFlakiness(trials, variant) {
+  if (trials.length < 2) return 0
+
+  const rates = trials.map((t) => {
+    const checks = t[variant].checks
+    const passed = checks.filter((c) => c.passed).length
+    return checks.length ? passed / checks.length : 0
+  })
+
+  const mean = rates.reduce((a, b) => a + b, 0) / rates.length
+  const variance =
+    rates.reduce((sum, r) => sum + (r - mean) ** 2, 0) / rates.length
+  return variance
+}
+
+/**
  * Derive eval type from name suffix.
  */
 function evalType(name) {
@@ -66,16 +85,21 @@ function evalType(name) {
  */
 export async function generateReport(allResults, resultsDir) {
   const hasFull = allResults[0]?.trials[0]?.full != null
-  const summary = allResults.map((r) => ({
-    name: r.name,
-    rule: r.rule,
-    type: evalType(r.name),
-    category: r.category || "misc",
-    classification: classify(r),
-    baseline: fractionStr(r.trials, "baseline"),
-    full: hasFull ? fractionStr(r.trials, "full") : null,
-    extracted: fractionStr(r.trials, "extracted"),
-  }))
+  const summary = allResults.map((r) => {
+    const extractedFlakiness = calcFlakiness(r.trials, "extracted")
+    return {
+      name: r.name,
+      rule: r.rule,
+      type: evalType(r.name),
+      category: r.category || "misc",
+      classification: classify(r),
+      baseline: fractionStr(r.trials, "baseline"),
+      full: hasFull ? fractionStr(r.trials, "full") : null,
+      extracted: fractionStr(r.trials, "extracted"),
+      flaky: extractedFlakiness > 0.2,
+      flakiness: extractedFlakiness,
+    }
+  })
 
   // Sort by classification priority
   const order = {
@@ -157,13 +181,14 @@ function buildMarkdown(summary, allResults) {
       "already-known": "⚪",
       "no-improvement": "🔴",
     }[s.classification]
+    const flakyIcon = s.flaky ? " ⚠️" : ""
     if (hasFull) {
       lines.push(
-        `| ${s.name} | ${s.type} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.full} | ${s.extracted} |`,
+        `| ${s.name}${flakyIcon} | ${s.type} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.full} | ${s.extracted} |`,
       )
     } else {
       lines.push(
-        `| ${s.name} | ${s.type} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.extracted} |`,
+        `| ${s.name}${flakyIcon} | ${s.type} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.extracted} |`,
       )
     }
   }

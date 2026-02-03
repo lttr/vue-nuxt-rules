@@ -3,8 +3,15 @@
 import { parseArgs } from "node:util"
 import { mkdir } from "node:fs/promises"
 import { join } from "node:path"
+import pLimit from "p-limit"
 import { loadEvals, runEval, saveResults } from "./lib/runner.mjs"
 import { generateReport } from "./lib/reporter.mjs"
+import {
+  loadCache,
+  saveCache,
+  getTrialCount,
+  updateCacheEntry,
+} from "./lib/cache.mjs"
 
 const { values: opts } = parseArgs({
   options: {
@@ -14,6 +21,7 @@ const { values: opts } = parseArgs({
     full: { type: "boolean", default: false },
     "skip-generation": { type: "boolean", default: false },
     "results-dir": { type: "string" },
+    concurrency: { type: "string", default: "3" },
   },
 })
 
@@ -37,22 +45,31 @@ if (evals.length === 0) {
 
 console.log(`Running ${evals.length} eval(s), results → ${RESULTS_DIR}\n`)
 
+const cache = await loadCache()
 const allResults = []
 
-for (const evalDef of evals) {
+const concurrency = parseInt(opts.concurrency) || 3
+const limit = pLimit(concurrency)
+
+console.log(`Concurrency: ${concurrency}\n`)
+
+const runOne = async (evalDef) => {
   const slug = evalDef.rule.replace(".md", "")
-  console.log(`▸ ${slug}`)
+  const trialCount = opts.trials
+    ? parseInt(opts.trials)
+    : getTrialCount(evalDef.name, cache)
+  console.log(`▸ ${slug} (${trialCount} trial${trialCount > 1 ? "s" : ""})`)
 
   const result = await runEval(evalDef, {
-    trials: opts.trials ? parseInt(opts.trials) : 2,
+    trials: trialCount,
     model: opts.model,
     includeFull: opts.full,
     skipGeneration: opts["skip-generation"],
     resultsDir: RESULTS_DIR,
+    cache,
   })
 
   await saveResults(result, RESULTS_DIR)
-  allResults.push(result)
 
   // Print quick summary
   const total = result.trials.flatMap((t) => t.baseline.checks).length
@@ -62,17 +79,32 @@ for (const evalDef of evals) {
   const extractedPass = result.trials
     .flatMap((t) => t.extracted.checks)
     .filter((c) => c.passed).length
-  let summary = `  baseline: ${baselinePass}/${total}  extracted: ${extractedPass}/${total}`
+  let summaryLine = `  baseline: ${baselinePass}/${total}  extracted: ${extractedPass}/${total}`
   if (opts.full) {
     const fullPass = result.trials
       .flatMap((t) => t.full.checks)
       .filter((c) => c.passed).length
-    summary += `  full: ${fullPass}/${total}`
+    summaryLine += `  full: ${fullPass}/${total}`
   }
-  console.log(summary + "\n")
+  if (result.skippedBaseline) summaryLine += " (baseline skipped)"
+  console.log(summaryLine + "\n")
+
+  return result
 }
 
+const results = await Promise.all(evals.map((e) => limit(() => runOne(e))))
+allResults.push(...results)
+
 const { summary } = await generateReport(allResults, RESULTS_DIR)
+
+// Update cache with new results
+for (const s of summary) {
+  const passRate =
+    parseFloat(s.extracted.split("/")[0]) /
+    parseFloat(s.extracted.split("/")[1])
+  updateCacheEntry(s.name, s.classification, passRate, cache)
+}
+await saveCache(cache)
 
 // Print summary table
 console.log("\n=== Summary ===\n")

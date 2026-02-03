@@ -34,6 +34,9 @@ node run.mjs --full
 
 # Re-evaluate existing generated code (skip generation)
 node run.mjs --skip-generation --results-dir results/2026-01-29T08-00-16
+
+# Control parallel execution (default: 3)
+node run.mjs --concurrency 5
 ```
 
 ### Rule Variants
@@ -112,11 +115,22 @@ results/2026-01-29T08-00-16/
 ```
 eval/
   run.mjs                 # CLI entry point
+  eval-cache.json         # classification + pass history cache
   lib/
     runner.mjs             # orchestration, spawns claude -p
-    evaluator.mjs          # regex checks + AI judge
+    evaluator.mjs          # regex checks + AI judge (batched)
     extract-rule.mjs       # parses "Rule for AI agents" from .md
     reporter.mjs           # markdown + JSON report generation
+    cache.mjs              # eval cache management
   evals/                   # one YAML per rule (25 total)
   results/                 # per-run timestamped dirs
 ```
+
+## Optimizations
+
+- **Parallel generation**: Evals run concurrently (default: 3, configurable via `--concurrency`)
+- **Adaptive trial count**: Stable/already-known rules get 1 trial, new/flaky rules get 2
+- **Baseline skipping**: `already-known` rules skip baseline generation on subsequent runs
+- **Batched AI judge**: Multiple criteria evaluated in single Claude call
+- **Flakiness tracking**: Rules with >20% variance flagged with ⚠️ in reports
+- **Bloat filtering**: `node_modules/`, `.git/`, lockfiles excluded from saved output
