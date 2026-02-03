@@ -23,30 +23,28 @@ node run.mjs
 # Single eval
 node run.mjs --eval prefer-definemodel
 
-# Filter by category
-node run.mjs --category composables
-
-# Override trial count (default: 1)
+# Override trial count (default: 2)
 node run.mjs --trials 3
 
 # Pin model (default: claude-opus-4-5-20251101)
 node run.mjs --model claude-sonnet-4-20250514
 
-# Use only the "Rule for AI agents" block instead of full .md
-node run.mjs --rule-mode extracted
+# Include full rule variant (runs baseline + extracted + full)
+node run.mjs --full
 
 # Re-evaluate existing generated code (skip generation)
 node run.mjs --skip-generation --results-dir results/2026-01-29T08-00-16
 ```
 
-### Rule Modes
+### Rule Variants
 
 Each eval runs in an isolated temp environment with credentials copied from `~/.claude/`. Rules are delivered via Claude Code's native `.claude/rules/` mechanism.
 
-| Mode        | Description                                                       |
-| ----------- | ----------------------------------------------------------------- |
-| `full`      | Copies the entire rule `.md` file into `.claude/rules/` (default) |
-| `extracted` | Extracts only the "Rule for AI agents" code block                 |
+| Variant     | Description                                           |
+| ----------- | ----------------------------------------------------- |
+| `baseline`  | No rule injected (control)                            |
+| `extracted` | Only the "Rule for AI agents" code block (default)    |
+| `full`      | Entire rule `.md` file (opt-in via `--full` flag)     |
 
 ## Eval Definition Format
 
@@ -96,13 +94,15 @@ Results are written to `results/<timestamp>/`:
 results/2026-01-29T08-00-16/
   report.md                       # markdown summary + detailed breakdown
   prefer-definemodel/
+    setup.md                      # model, prompt, system prompt
     trial-0-baseline/
-      output.vue                  # generated code
-      setup.md                    # model, prompt, system prompt, rule content
+      output/                     # generated code files
       checks.md                   # evaluation check results
-    trial-0-with-rule/
-      output.vue
-      setup.md
+    trial-0-extracted/
+      output/
+      checks.md
+    trial-0-full/                 # only if --full flag used
+      output/
       checks.md
   ...
 ```
@@ -118,5 +118,5 @@ eval/
     extract-rule.mjs       # parses "Rule for AI agents" from .md
     reporter.mjs           # markdown + JSON report generation
   evals/                   # one YAML per rule (25 total)
-  results/                 # gitignored, per-run timestamped dirs
+  results/                 # per-run timestamped dirs
 ```
