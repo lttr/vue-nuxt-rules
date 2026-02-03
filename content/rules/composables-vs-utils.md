@@ -43,8 +43,7 @@ function formatDate(date: Date): string {
 ## Rule for AI agents
 
 ```
-- Only create composables when you need reactivity or lifecycle hooks — otherwise use plain utility functions
-- Composables manage state/logic, not UI side effects — expose state, let components handle presentation
+PREFER plain utility functions over composables unless you need reactivity or lifecycle hooks. Expose state, let components handle presentation.
 ```
 
 ## Eslint rule

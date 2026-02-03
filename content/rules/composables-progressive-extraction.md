@@ -32,7 +32,7 @@ export function useCounter() {
 ## Rule for AI agents
 
 ```
-Don't extract to shared composables/ until a second consumer exists. Ladder: inline → colocated file → shared composables/.
+PREFER inline composables; extract to shared `composables/` only when a second consumer exists. Ladder: inline → colocated → shared.
 ```
 
 ## Eslint rule
