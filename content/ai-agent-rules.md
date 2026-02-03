@@ -44,7 +44,7 @@ Each rule is tested against AI models with before/after comparisons. Rules that 
 - ALWAYS expose `loading`/`error` refs from async composables; use `watchEffect` for reactive data fetching
 - PREFER `toValue()` to accept refs, getters, or plain values as input
 - PREFER splitting large composables by concern (e.g. `useCart` → `useAddToCart` + `useFetchCart`)
-- PREFER organizing code within composables as: state → metadata → methods → return
+- PREFER grouping composable code by concern/feature, not by Vue API type (refs, computed, watchers)
 - PREFER extracting calculations to pure helper functions; composable only handles reactivity
 - Only create composables when you need reactivity or lifecycle hooks — otherwise use plain utility functions
 - Composables manage state/logic, not UI side effects — expose state, let components handle presentation

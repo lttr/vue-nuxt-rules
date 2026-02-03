@@ -43,7 +43,7 @@ function useUserProfile(userId: Ref<string>) {
 ## Rule for AI agents
 
 ```
-- PREFER organizing code within composables as: state → metadata → methods → return
+- PREFER grouping composable code by concern/feature, not by Vue API type (refs, computed, watchers)
 ```
 
 ## Eslint rule
