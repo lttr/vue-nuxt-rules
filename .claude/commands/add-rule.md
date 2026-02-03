@@ -21,18 +21,21 @@ The command accepts a required argument: `<rule-name>` (e.g., `my-new-rule`, `co
 
 ### Step 2: Check if Rule Already Exists
 
-Check if the rule file already exists:
+Check if the rule file already exists at `content/rules/<rule-name>.md`. If it exists, inform the user and stop.
 
-```bash
-if [[ -f "content/rules/<rule-name>.md" ]]; then
-  echo "ERROR: Rule already exists: content/rules/<rule-name>.md"
-  exit 1
-fi
-```
+### Step 3: Determine Category
 
-If it exists, inform the user and stop.
+Read `.vitepress/config.mts` to see the available categories:
 
-### Step 3: Create the Rule File
+- Vue SFC Structure
+- Props & State
+- Template Directives
+- Styles
+- Composables
+
+Ask the user which category this rule belongs to.
+
+### Step 4: Create the Rule File
 
 Create a new markdown file at `content/rules/<rule-name>.md` with the following structure:
 
@@ -57,36 +60,6 @@ Create a new markdown file at `content/rules/<rule-name>.md` with the following 
 - <Link to official Vue/Nuxt documentation or other authoritative source>
 ```
 
-**Example structure** (from `content/rules/multi-word-component-names.md`):
-
-```markdown
-# Multi-word component names
-
-This rule require component names to be always multi-word, except for root App components, and built-in components provided by Vue, such as `<transition>` or `<component>`. This prevents conflicts with existing and future HTML elements, since all HTML elements are single words.
-
-For Nuxt, there has to be some exceptions:
-
-- `app.vue`
-- `error.vue`
-- `pages/*.vue`
-- `layouts/*.vue`
-
-## Rule for AI agents
-```
-
-- ALWAYS use multi-word component names except for Nuxt pages and layouts
-
-```
-
-## Eslint rule
-
-- https://eslint.vuejs.org/rules/multi-word-component-names.html#related-rules
-
-## Source
-
-- https://vuejs.org/style-guide/rules-essential.html#use-multi-word-component-names
-```
-
 **For each content section, follow this workflow:**
 
 1. Generate a suggested version based on the rule name and common Vue/Nuxt patterns
@@ -106,35 +79,68 @@ For Nuxt, there has to be some exceptions:
 
 Present all suggestions together, then ask the user to confirm or provide alternatives for each section.
 
-### Step 4: Update Sidebar Navigation
+### Step 5: Update Sidebar Navigation
 
 Update `.vitepress/config.mts` to add the new rule to the sidebar:
 
 1. Read the config file
-2. Find the `items` array under the `/rules/` section
-3. Add a new entry in alphabetical order:
+2. Find the `items` array under the chosen category section
+3. Add a new entry at the end of that category's items:
    ```typescript
    { text: '<Human-readable Title>', link: '/rules/<rule-name>' }
    ```
 4. Use the Edit tool to add the entry
 
-### Step 5: Update Rules Index
+### Step 6: Update Rules Index
 
 Update `content/rules.md` to add a link to the new rule:
 
 1. Read the file
-2. Add a new list item in the appropriate location (alphabetically or by category)
+2. Add a new list item under the appropriate category section
 3. Format: `- [<Human-readable Title>](/rules/<rule-name>)`
 
-### Step 6: Update AI Agent Rules
+### Step 7: Update AI Agent Rules (if applicable)
 
-Update `content/ai-agent-rules.md` to include the new rule:
+The file `content/ai-agent-rules.md` contains a curated set of rules inside a code block. Rules are grouped by section (Vue Components, Composables, Styling).
+
+**Only add to ai-agent-rules.md if:**
+
+- The rule provides meaningful guidance for AI code generation
+- The rule is not already covered by an existing entry
+
+If adding:
 
 1. Read the file
-2. Add the concise rule statement to the list
-3. Keep consistent formatting with existing entries
+2. Find the appropriate section inside the code block
+3. Add the concise rule statement in the same format as existing entries
 
-### Step 7: Confirm Creation
+### Step 8: Create Eval File
+
+Create an eval file at `eval/evals/<rule-name>.yaml`:
+
+```yaml
+rule: <rule-name>.md
+category: <category-slug>
+trials: 1
+
+prompt: |
+  <A realistic prompt that would test whether the AI follows this rule>
+
+checks:
+  - id: <check-id>
+    type: regex
+    pattern: "<regex pattern to verify rule compliance>"
+    expect: present # or absent
+```
+
+**Category slugs:** `sfc-structure`, `props-state`, `template-directives`, `styles`, `composables`
+
+Ask the user for:
+
+1. A test prompt that would naturally invoke this rule
+2. Regex patterns to verify compliance
+
+### Step 9: Confirm Creation
 
 Report success to the user:
 
@@ -145,11 +151,13 @@ Files updated:
 - content/rules/<rule-name>.md (created)
 - .vitepress/config.mts (updated sidebar)
 - content/rules.md (updated index)
-- content/ai-agent-rules.md (updated AI rules)
+- content/ai-agent-rules.md (updated AI rules) [if applicable]
+- eval/evals/<rule-name>.yaml (created)
 
 Next steps:
 - Review the generated content
 - Run `nr dev` to preview changes
+- Run `cd eval && node run.mjs` to test the eval
 - Commit the changes when ready
 ```
 
