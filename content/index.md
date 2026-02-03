@@ -12,10 +12,12 @@ hero:
       link: /rules
 
 features:
+  - title: Evaluated for AI Agents
+    details: Rules are tested against AI models to verify they actually improve code generation.
   - title: Opinionated
     details: Not for every project, a good start anyway
   - title: Automated
     details: Most rules should be automatable by eslint, typescript or at least with an AI based tool
   - title: Pragmatic
-    details: There is not best way to do everything. Every rule have a reason, but if you have different reason, maybe alter the rule and move forward!
+    details: There is no best way to do everything. Every rule have a reason, but if you have different opinion, alter the rule and move forward!
 ---

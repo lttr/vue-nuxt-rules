@@ -1,5 +1,21 @@
 # AI Agent Rules
 
+These rules are designed for AI code generation agents. They complement — not replace — your formatting and linting pipeline.
+
+## Philosophy
+
+**AI generates conceptually correct code.** The goal is right patterns, right architecture, right conventions. Exact formatting is irrelevant — Prettier handles that.
+
+**ESLint runs after generation.** Auto-fixable issues resolve automatically. But some violations require manual intervention, so we include those rules explicitly even when ESLint covers them.
+
+**Not all rules are needed.** Some conventions are already baked into AI models. We run evals to identify which rules actually improve output vs. which are redundant.
+
+## Evaluated Rules
+
+Each rule is tested against AI models with before/after comparisons. Rules that don't measurably improve code generation are excluded. This prevents rule bloat and keeps the agent context focused on what matters.
+
+---
+
 ```
 # Vue/Nuxt Code Conventions
 
