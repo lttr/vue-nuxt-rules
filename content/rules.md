@@ -1,5 +1,11 @@
 # Rules
 
+## Philosophy
+
+These rules exist as a reference for humans. The goal is consistent, readable, and maintainable code through shared conventions.
+
+AI agents can use these rules as context for code generation, refactoring, or code review. Some rules overlap with what linting and code formatting tools handle automatically. The goal is reducing post-generation fixes, especially those requiring manual intervention.
+
 ## Vue SFC Structure
 
 - [Overview](/rules/sfc-structure)
