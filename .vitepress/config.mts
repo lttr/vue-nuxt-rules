@@ -16,6 +16,7 @@ export default defineConfig({
     sidebar: [
       { text: "All Rules", link: "/rules" },
       { text: "AI Agent Rules", link: "/ai-agent-rules" },
+      { text: "Rule Evals", link: "/rule-evals" },
       {
         text: "Vue SFC Structure",
         collapsed: false,
