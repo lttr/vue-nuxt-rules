@@ -1,0 +1,35 @@
+rule: composables-cleanup.md
+
+prompt: |
+  Improve usePolling.ts:
+  ```ts
+  // usePolling.ts
+  export function usePolling(url: string, intervalMs = 5000) {
+    const data = ref(null)
+    const error = ref(null)
+
+    const poll = async () => {
+      try {
+        const res = await fetch(url)
+        data.value = await res.json()
+      } catch (e) {
+        error.value = e
+      }
+    }
+
+    poll()
+    setInterval(poll, intervalMs)
+
+    return { data, error }
+  }
+  ```
+  Write the improved version to usePolling.ts.
+checks:
+  - id: has-cleanup
+    type: regex
+    pattern: "onUnmounted|onScopeDispose"
+    expect: present
+  - id: clears-interval
+    type: regex
+    pattern: "clearInterval"
+    expect: present

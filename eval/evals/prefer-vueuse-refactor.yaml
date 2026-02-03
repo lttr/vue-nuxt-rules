@@ -1,0 +1,18 @@
+rule: prefer-vueuse.md
+
+prompt: |
+  Improve useLocalStorage.ts:
+  ```ts
+  // useLocalStorage.ts
+  export function useLocalStorage(key: string, defaultValue: string) {
+    const value = ref(localStorage.getItem(key) ?? defaultValue)
+    watch(value, (v) => localStorage.setItem(key, v))
+    return value
+  }
+  ```
+  Write the improved version to useLocalStorage.ts.
+checks:
+  - id: uses-vueuse
+    type: regex
+    pattern: "@vueuse/core|from ['\"]@vueuse"
+    expect: present

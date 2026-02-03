@@ -1,0 +1,22 @@
+rule: prefer-ref-over-reactive.md
+
+prompt: |
+  Improve TodoList.vue:
+  ```vue
+  <!-- TodoList.vue -->
+  <script setup lang="ts">
+  import { reactive } from 'vue'
+  const state = reactive({ items: [], loading: false, error: null })
+  // ... rest of component using state.items, state.loading
+  </script>
+  ```
+  Write the improved version to TodoList.vue.
+checks:
+  - id: converted-to-ref
+    type: regex
+    pattern: "\\bref\\s*[<(]"
+    expect: present
+  - id: no-reactive
+    type: regex
+    pattern: "\\breactive\\s*\\("
+    expect: absent

@@ -230,6 +230,7 @@ export async function runEval(evalDef, opts = {}) {
   const trials = opts.trials ?? evalDef.trials ?? 1
 
   const results = {
+    name: evalDef.name,
     rule: evalDef.rule,
     category: evalDef.category,
     trials: [],
@@ -256,7 +257,7 @@ export async function runEval(evalDef, opts = {}) {
     } else {
       // Load from results dir
       const dir = opts.resultsDir
-      const slug = evalDef.rule.replace(".md", "")
+      const slug = evalDef.name
       trial.baseline.code = await loadVariant(dir, slug, `trial-${t}-baseline`)
       trial.full.code = await loadVariant(dir, slug, `trial-${t}-full`)
       trial.extracted.code = await loadVariant(dir, slug, `trial-${t}-extracted`)
@@ -342,7 +343,7 @@ async function loadVariant(resultsDir, slug, variantName) {
  * Writes each file into a variant subdirectory.
  */
 export async function saveResults(evalResult, resultsDir) {
-  const slug = evalResult.rule.replace(".md", "")
+  const slug = evalResult.name
   const dir = join(resultsDir, slug)
   await mkdir(dir, { recursive: true })
 
@@ -397,6 +398,7 @@ export async function loadEvals(evalsDir, filter = {}) {
     if (filter.eval && name !== filter.eval) continue
     if (filter.category && def.category !== filter.category) continue
 
+    def.name = name
     evals.push(def)
   }
 
