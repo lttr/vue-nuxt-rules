@@ -29,7 +29,7 @@
 - PREFER `toValue()` to accept refs, getters, or plain values as input
 - PREFER splitting large composables by concern (e.g. `useCart` → `useAddToCart` + `useFetchCart`)
 - PREFER organizing code within composables as: state → metadata → methods → return
-- Keep composables as thin reactive wrappers; extract pure business logic to plain functions for testability
+- PREFER extracting calculations to pure helper functions; composable only handles reactivity
 - Only create composables when you need reactivity or lifecycle hooks — otherwise use plain utility functions
 - Composables manage state/logic, not UI side effects — expose state, let components handle presentation
 - Don't extract to shared `composables/` until a second consumer exists (inline → colocated → shared)

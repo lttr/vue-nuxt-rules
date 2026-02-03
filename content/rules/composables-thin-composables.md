@@ -36,7 +36,7 @@ export function useDiscount(price: Ref<number>, tier: Ref<string>) {
 ## Rule for AI agents
 
 ```
-- Keep composables as thin reactive wrappers; extract pure business logic to plain functions for testability
+- PREFER extracting calculations to pure helper functions; composable only handles reactivity
 ```
 
 ## Eslint rule
