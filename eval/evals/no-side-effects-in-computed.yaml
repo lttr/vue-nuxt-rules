@@ -3,12 +3,10 @@ category: props-state
 trials: 1
 
 prompt: |
-  Create a Vue 3 component that displays a shopping cart.
-  It has a list of items with price and quantity.
-  Create a computed property that tracks the total price and logs when it changes.
+  Create a Vue 3 component with a list of products (name, price, inStock boolean).
+  Add a computed that filters to in-stock items and also updates a "lastFilteredCount" ref with the count.
 
 checks:
-  - id: no-mutation-in-computed
-    type: regex
-    pattern: "\\.(push|splice|value\\s*=)"
-    expect: absent
+  - id: no-ref-assignment-in-computed
+    type: ai-judge
+    criteria: The computed property must NOT assign to any .value (no side effects). Using watch() or a separate computed for the count is correct.
