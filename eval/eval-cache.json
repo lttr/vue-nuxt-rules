@@ -1,126 +1,190 @@
 {
   "composables-organize-by-concern": {
     "classification": "with-rule-better",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "composables-thin-composables": {
     "classification": "with-rule-better",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "define-emits-with-typescript": {
     "classification": "with-rule-better",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "define-props-with-typescript": {
     "classification": "with-rule-better",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "destructure-props": {
     "classification": "with-rule-better",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "group-script-by-logical-concerns": {
     "classification": "with-rule-better",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "multi-word-component-names": {
     "classification": "with-rule-better",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "prefer-ref-over-reactive-refactor": {
     "classification": "with-rule-better",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "prefer-vueuse-refactor": {
     "classification": "with-rule-better",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "prefer-vueuse": {
     "classification": "with-rule-better",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "same-name-prop-shorthand": {
     "classification": "with-rule-better",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "script-setup-with-typescript": {
     "classification": "with-rule-better",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "use-of-instead-of-in-for-v-for": {
     "classification": "with-rule-better",
-    "passHistory": [1]
-  },
-  "no-side-effects-in-computed": {
-    "classification": "no-improvement",
-    "passHistory": [0]
+    "passHistory": [
+      1
+    ]
   },
   "composables-async-patterns": {
     "classification": "already-known",
-    "passHistory": [0.875]
+    "passHistory": [
+      0.875
+    ]
   },
   "composables-cleanup-refactor": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "composables-cleanup": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "composables-input-flexibility": {
     "classification": "already-known",
-    "passHistory": [0.5]
+    "passHistory": [
+      0.5,
+      1,
+      1
+    ]
   },
   "composables-naming": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "composables-organize-by-concern-refactor": {
     "classification": "already-known",
-    "passHistory": [0.5]
+    "passHistory": [
+      0.5
+    ]
   },
   "composables-progressive-extraction": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "composables-return-refs": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "composables-setup-context": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "composables-single-responsibility": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "composables-vs-utils": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "keyed-v-for": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "no-mutating-props": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "prefer-definemodel": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "prefer-ref-over-reactive": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "scoped-styles": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
   },
   "template-on-the-top": {
     "classification": "already-known",
-    "passHistory": [1]
+    "passHistory": [
+      1
+    ]
+  },
+  "no-side-effects-in-computed": {
+    "classification": "with-rule-better",
+    "passHistory": [
+      1
+    ]
   }
 }

@@ -3,10 +3,10 @@ category: composables
 trials: 1
 
 prompt: |
-  Create a Vue 3 composable called useTitle that sets the document
-  title. It should accept the title from the caller, which might
-  pass a static string, a reactive value, or a function. Update
-  the document title when the input changes.
+  Create a reusable Vue 3 composable called useTitle that sets the
+  document title. It will be shared across multiple components.
+  Accept a title from the caller and update the document title
+  reactively when the input changes.
 
 checks:
   - id: uses-tovalue
