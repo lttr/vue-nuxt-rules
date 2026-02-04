@@ -5,6 +5,7 @@ VitePress docs site with Vue/Nuxt code style rules.
 ## Commands
 
 - `nr dev` / `nr build` / `nr preview`
+- `nr release` — bump version, update CHANGELOG, tag + push
 - `cd eval && node run.mjs` — run rule evals (see `eval/README.md`)
 
 ## Adding Rules
