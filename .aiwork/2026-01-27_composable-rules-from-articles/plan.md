@@ -1,6 +1,4 @@
 ---
-created: 2026-01-27
-type: plan
 status: complete
 references:
   - https://michaelnthiessen.com/composable-patterns-in-vue

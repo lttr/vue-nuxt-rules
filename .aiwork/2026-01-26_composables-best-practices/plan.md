@@ -1,6 +1,4 @@
 ---
-created: 2026-01-26
-type: plan
 status: complete
 ---
 
