@@ -76,10 +76,10 @@ const runOne = async (evalDef) => {
   const baselinePass = result.trials
     .flatMap((t) => t.baseline.checks)
     .filter((c) => c.passed).length
-  const extractedPass = result.trials
-    .flatMap((t) => t.extracted.checks)
+  const withRulePass = result.trials
+    .flatMap((t) => t.withRule.checks)
     .filter((c) => c.passed).length
-  let summaryLine = `  baseline: ${baselinePass}/${total}  extracted: ${extractedPass}/${total}`
+  let summaryLine = `  baseline: ${baselinePass}/${total}  with-rule: ${withRulePass}/${total}`
   if (opts.full) {
     const fullPass = result.trials
       .flatMap((t) => t.full.checks)
@@ -100,8 +100,8 @@ const { summary } = await generateReport(allResults, RESULTS_DIR)
 // Update cache with new results
 for (const s of summary) {
   const passRate =
-    parseFloat(s.extracted.split("/")[0]) /
-    parseFloat(s.extracted.split("/")[1])
+    parseFloat(s.withRule.split("/")[0]) /
+    parseFloat(s.withRule.split("/")[1])
   updateCacheEntry(s.name, s.classification, passRate, cache)
 }
 await saveCache(cache)
@@ -111,22 +111,22 @@ console.log("\n=== Summary ===\n")
 const pad = (s, n) => s.padEnd(n)
 if (opts.full) {
   console.log(
-    `${pad("Name", 40)} ${pad("Classification", 20)} ${pad("Baseline", 10)} ${pad("Full", 10)} Extracted`,
+    `${pad("Name", 40)} ${pad("Classification", 20)} ${pad("Baseline", 10)} ${pad("Full", 10)} With Rule`,
   )
   console.log("-".repeat(95))
   for (const s of summary) {
     console.log(
-      `${pad(s.name, 40)} ${pad(s.classification, 20)} ${pad(s.baseline, 10)} ${pad(s.full || "-", 10)} ${s.extracted}`,
+      `${pad(s.name, 40)} ${pad(s.classification, 20)} ${pad(s.baseline, 10)} ${pad(s.full || "-", 10)} ${s.withRule}`,
     )
   }
 } else {
   console.log(
-    `${pad("Name", 40)} ${pad("Classification", 20)} ${pad("Baseline", 10)} Extracted`,
+    `${pad("Name", 40)} ${pad("Classification", 20)} ${pad("Baseline", 10)} With Rule`,
   )
   console.log("-".repeat(75))
   for (const s of summary) {
     console.log(
-      `${pad(s.name, 40)} ${pad(s.classification, 20)} ${pad(s.baseline, 10)} ${s.extracted}`,
+      `${pad(s.name, 40)} ${pad(s.classification, 20)} ${pad(s.baseline, 10)} ${s.withRule}`,
     )
   }
 }

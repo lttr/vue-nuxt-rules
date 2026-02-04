@@ -4,60 +4,34 @@ Measures which AI rules LLMs already know vs which need explicit injection.
 
 ## How It Works
 
-For each rule, the tool:
+For each rule:
 
-1. **Generates code without the rule** (baseline) — prompts an LLM with a feature description only
-2. **Generates code with the rule loaded** — same prompt, but with the rule placed in `.claude/rules/` in an isolated environment
-3. **Evaluates both outputs** against checks (regex patterns and/or AI judge)
-4. **Classifies** the rule:
-   - **Already Known** — baseline passes all checks (rule adds no value)
-   - **High Value** — baseline fails, with-rule passes (rule is needed)
-   - **No Improvement** — fails both (rule doesn't help, or check needs tuning)
+1. **Baseline** — generate code without the rule
+2. **With rule** — same prompt, rule in `.claude/rules/`
+3. **Evaluate** both against checks (regex + AI judge)
+4. **Classify**:
+   - **Already Known** — baseline passes (rule adds no value)
+   - **High Value** — baseline fails, with-rule passes
+   - **No Improvement** — both fail
 
 ## Usage
 
 ```bash
-# Run all evals
-node run.mjs
-
-# Single eval
-node run.mjs --eval prefer-definemodel
-
-# Override trial count (default: 2)
-node run.mjs --trials 3
-
-# Pin model (default: claude-opus-4-5-20251101)
+node run.mjs                              # all evals
+node run.mjs --eval prefer-definemodel    # single eval
+node run.mjs --trials 3                   # override trials (default: 2)
 node run.mjs --model claude-sonnet-4-20250514
-
-# Include full rule variant (runs baseline + extracted + full)
-node run.mjs --full
-
-# Re-evaluate existing generated code (skip generation)
+node run.mjs --concurrency 5              # parallel evals (default: 3)
+node run.mjs --full                       # also test full rule markdown (3 variants)
 node run.mjs --skip-generation --results-dir results/2026-01-29T08-00-16
-
-# Control parallel execution (default: 3)
-node run.mjs --concurrency 5
 ```
 
-### Rule Variants
-
-Each eval runs in an isolated temp environment with credentials copied from `~/.claude/`. Rules are delivered via Claude Code's native `.claude/rules/` mechanism.
-
-| Variant     | Description                                        |
-| ----------- | -------------------------------------------------- |
-| `baseline`  | No rule injected (control)                         |
-| `extracted` | Only the "Rule for AI agents" code block (default) |
-| `full`      | Entire rule `.md` file (opt-in via `--full` flag)  |
-
-## Eval Definition Format
+## Eval Definition
 
 Each `.yaml` in `evals/` defines one eval:
 
 ```yaml
-rule: prefer-definemodel.md # rule file in content/rules/
-category: props # for filtering
-trials: 1 # per-eval override
-
+rule: prefer-definemodel.md
 prompt: |
   Create a Vue 3 SFC component called RatingInput.
   It shows 5 star buttons. The parent needs to read
@@ -67,7 +41,7 @@ checks:
   - id: uses-definemodel
     type: regex
     pattern: "defineModel\\s*[<(]"
-    expect: present # or "absent"
+    expect: present
   - id: overall-quality
     type: ai-judge
     criteria: |
@@ -75,62 +49,27 @@ checks:
       PASS or FAIL with brief reason.
 ```
 
-### Prompt Design
-
-Prompts describe **feature/UX requirements only** — never mention technical patterns or APIs. The LLM must choose the approach on its own.
-
-- ✅ "Create a text input component whose value syncs with the parent"
-- ❌ "Create a component using defineModel"
-
-### Check Types
-
-| Type       | Description                                                                    |
-| ---------- | ------------------------------------------------------------------------------ |
-| `regex`    | Tests pattern against generated code. `expect: present` (default) or `absent`. |
-| `ai-judge` | Sends code + criteria to an LLM, expects `PASS` or `FAIL` response.            |
+Prompts describe **feature requirements only** — never mention APIs. The LLM chooses.
 
 ## Output
 
-Results are written to `results/<timestamp>/`:
-
 ```
-results/2026-01-29T08-00-16/
-  report.md                       # markdown summary + detailed breakdown
+results/<timestamp>/
+  report.md
   prefer-definemodel/
-    setup.md                      # model, prompt, system prompt
+    setup.md
     trial-0-baseline/
-      output/                     # generated code files
-      checks.md                   # evaluation check results
-    trial-0-extracted/
       output/
       checks.md
-    trial-0-full/                 # only if --full flag used
+    trial-0-with-rule/
       output/
       checks.md
-  ...
-```
-
-## Structure
-
-```
-eval/
-  run.mjs                 # CLI entry point
-  eval-cache.json         # classification + pass history cache
-  lib/
-    runner.mjs             # orchestration, spawns claude -p
-    evaluator.mjs          # regex checks + AI judge (batched)
-    extract-rule.mjs       # parses "Rule for AI agents" from .md
-    reporter.mjs           # markdown + JSON report generation
-    cache.mjs              # eval cache management
-  evals/                   # one YAML per rule (25 total)
-  results/                 # per-run timestamped dirs
 ```
 
 ## Optimizations
 
-- **Parallel generation**: Evals run concurrently (default: 3, configurable via `--concurrency`)
-- **Adaptive trial count**: Stable/already-known rules get 1 trial, new/flaky rules get 2
-- **Baseline skipping**: `already-known` rules skip baseline generation on subsequent runs
-- **Batched AI judge**: Multiple criteria evaluated in single Claude call
-- **Flakiness tracking**: Rules with >20% variance flagged with ⚠️ in reports
-- **Bloat filtering**: `node_modules/`, `.git/`, lockfiles excluded from saved output
+- Parallel generation (configurable `--concurrency`)
+- Adaptive trials: stable rules get 1, flaky get 2
+- Baseline skipping for already-known rules
+- Batched AI judge calls
+- Flakiness tracking (⚠️ if >20% variance)

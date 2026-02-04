@@ -4,27 +4,27 @@ import { extractRule, getRulePath } from "./extract-rule.mjs"
 
 /**
  * Classify a rule based on eval results.
- * Handles both 2-variant (baseline, extracted) and 3-variant (+ full) modes.
+ * Handles both 2-variant (baseline, withRule) and 3-variant (+ full) modes.
  */
 function classify(evalResult) {
   const trials = evalResult.trials
   const hasFull = trials[0]?.full != null
 
   const baselineRate = passRate(trials, "baseline")
-  const extractedRate = passRate(trials, "extracted")
+  const withRuleRate = passRate(trials, "withRule")
   const fullRate = hasFull ? passRate(trials, "full") : null
 
   if (baselineRate === 1) return "already-known"
 
   if (hasFull) {
-    if (fullRate <= baselineRate && extractedRate <= baselineRate)
+    if (fullRate <= baselineRate && withRuleRate <= baselineRate)
       return "no-improvement"
-    if (fullRate > extractedRate) return "full-better"
-    if (extractedRate > fullRate) return "extracted-better"
+    if (fullRate > withRuleRate) return "full-better"
+    if (withRuleRate > fullRate) return "with-rule-better"
     return "both-help"
   } else {
-    if (extractedRate <= baselineRate) return "no-improvement"
-    return "extracted-better"
+    if (withRuleRate <= baselineRate) return "no-improvement"
+    return "with-rule-better"
   }
 }
 
@@ -86,7 +86,7 @@ function evalType(name) {
 export async function generateReport(allResults, resultsDir) {
   const hasFull = allResults[0]?.trials[0]?.full != null
   const summary = allResults.map((r) => {
-    const extractedFlakiness = calcFlakiness(r.trials, "extracted")
+    const withRuleFlakiness = calcFlakiness(r.trials, "withRule")
     return {
       name: r.name,
       rule: r.rule,
@@ -95,16 +95,16 @@ export async function generateReport(allResults, resultsDir) {
       classification: classify(r),
       baseline: fractionStr(r.trials, "baseline"),
       full: hasFull ? fractionStr(r.trials, "full") : null,
-      extracted: fractionStr(r.trials, "extracted"),
-      flaky: extractedFlakiness > 0.2,
-      flakiness: extractedFlakiness,
+      withRule: fractionStr(r.trials, "withRule"),
+      flaky: withRuleFlakiness > 0.2,
+      flakiness: withRuleFlakiness,
     }
   })
 
   // Sort by classification priority
   const order = {
     "full-better": 0,
-    "extracted-better": 1,
+    "with-rule-better": 1,
     "both-help": 2,
     "no-improvement": 3,
     "already-known": 4,
@@ -137,7 +137,7 @@ function buildMarkdown(summary, allResults) {
   const counts = {
     "already-known": 0,
     "full-better": 0,
-    "extracted-better": 0,
+    "with-rule-better": 0,
     "both-help": 0,
     "no-improvement": 0,
   }
@@ -148,7 +148,7 @@ function buildMarkdown(summary, allResults) {
   if (hasFull) {
     lines.push(`- **Full Better**: ${counts["full-better"]}`)
   }
-  lines.push(`- **Extracted Better**: ${counts["extracted-better"]}`)
+  lines.push(`- **With Rule Better**: ${counts["with-rule-better"]}`)
   if (hasFull) {
     lines.push(`- **Both Help**: ${counts["both-help"]}`)
   }
@@ -159,14 +159,14 @@ function buildMarkdown(summary, allResults) {
   lines.push("## Results\n")
   if (hasFull) {
     lines.push(
-      "| Name | Type | Category | Classification | Baseline | Full | Extracted |",
+      "| Name | Type | Category | Classification | Baseline | Full | With Rule |",
     )
     lines.push(
       "|------|------|----------|---------------|----------|------|-----------|",
     )
   } else {
     lines.push(
-      "| Name | Type | Category | Classification | Baseline | Extracted |",
+      "| Name | Type | Category | Classification | Baseline | With Rule |",
     )
     lines.push(
       "|------|------|----------|---------------|----------|-----------|",
@@ -176,7 +176,7 @@ function buildMarkdown(summary, allResults) {
   for (const s of summary) {
     const icon = {
       "full-better": "🟢",
-      "extracted-better": "🔵",
+      "with-rule-better": "🔵",
       "both-help": "🟡",
       "already-known": "⚪",
       "no-improvement": "🔴",
@@ -184,11 +184,11 @@ function buildMarkdown(summary, allResults) {
     const flakyIcon = s.flaky ? " ⚠️" : ""
     if (hasFull) {
       lines.push(
-        `| ${s.name}${flakyIcon} | ${s.type} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.full} | ${s.extracted} |`,
+        `| ${s.name}${flakyIcon} | ${s.type} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.full} | ${s.withRule} |`,
       )
     } else {
       lines.push(
-        `| ${s.name}${flakyIcon} | ${s.type} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.extracted} |`,
+        `| ${s.name}${flakyIcon} | ${s.type} | ${s.category} | ${icon} ${s.classification} | ${s.baseline} | ${s.withRule} |`,
       )
     }
   }
@@ -206,7 +206,7 @@ function buildMarkdown(summary, allResults) {
     for (const s of recommended) {
       if (hasFull) {
         const variant =
-          s.classification === "full-better" ? "full" : "extracted"
+          s.classification === "full-better" ? "full" : "withRule"
         lines.push(`- **${s.name}** → use **${variant}**`)
       } else {
         lines.push(`- **${s.name}** → use rule`)
@@ -222,20 +222,20 @@ function buildMarkdown(summary, allResults) {
     for (const trial of result.trials) {
       lines.push(`**Trial ${trial.index}**\n`)
       if (hasFull) {
-        lines.push("| Check | Baseline | Full | Extracted |")
+        lines.push("| Check | Baseline | Full | With Rule |")
         lines.push("|-------|----------|------|-----------|")
       } else {
-        lines.push("| Check | Baseline | Extracted |")
+        lines.push("| Check | Baseline | With Rule |")
         lines.push("|-------|----------|-----------|")
       }
 
       const baseChecks = trial.baseline.checks
       const fullChecks = trial.full?.checks
-      const extractedChecks = trial.extracted.checks
+      const withRuleChecks = trial.withRule.checks
 
       for (let i = 0; i < baseChecks.length; i++) {
         const b = baseChecks[i]
-        const e = extractedChecks[i]
+        const e = withRuleChecks[i]
         if (hasFull) {
           const f = fullChecks[i]
           lines.push(
@@ -251,13 +251,13 @@ function buildMarkdown(summary, allResults) {
       // Summarize differences vs baseline
       const fullImproved = []
       const fullRegressed = []
-      const extractedImproved = []
-      const extractedRegressed = []
+      const withRuleImproved = []
+      const withRuleRegressed = []
       for (let i = 0; i < baseChecks.length; i++) {
         const b = baseChecks[i]
-        const e = extractedChecks[i]
-        if (!b.passed && e.passed) extractedImproved.push(b.id)
-        if (b.passed && !e.passed) extractedRegressed.push(b.id)
+        const e = withRuleChecks[i]
+        if (!b.passed && e.passed) withRuleImproved.push(b.id)
+        if (b.passed && !e.passed) withRuleRegressed.push(b.id)
         if (hasFull) {
           const f = fullChecks[i]
           if (!b.passed && f.passed) fullImproved.push(b.id)
@@ -268,21 +268,21 @@ function buildMarkdown(summary, allResults) {
       const hasChanges =
         fullImproved.length > 0 ||
         fullRegressed.length > 0 ||
-        extractedImproved.length > 0 ||
-        extractedRegressed.length > 0
+        withRuleImproved.length > 0 ||
+        withRuleRegressed.length > 0
 
       if (hasChanges) {
         if (fullImproved.length > 0)
           lines.push(`🟢 **Full improved**: ${fullImproved.join(", ")}`)
         if (fullRegressed.length > 0)
           lines.push(`🔴 **Full regressed**: ${fullRegressed.join(", ")}`)
-        if (extractedImproved.length > 0)
+        if (withRuleImproved.length > 0)
           lines.push(
-            `🔵 **Extracted improved**: ${extractedImproved.join(", ")}`,
+            `🔵 **With-rule improved**: ${withRuleImproved.join(", ")}`,
           )
-        if (extractedRegressed.length > 0)
+        if (withRuleRegressed.length > 0)
           lines.push(
-            `🔴 **Extracted regressed**: ${extractedRegressed.join(", ")}`,
+            `🔴 **With-rule regressed**: ${withRuleRegressed.join(", ")}`,
           )
       } else if (baseChecks.every((c) => c.passed)) {
         lines.push(`⚪ **No difference** — all passed`)
@@ -310,8 +310,8 @@ async function buildRecommendedRules(recommended) {
     lines.push(`## ${category}\n`)
     for (const s of rules) {
       lines.push(`### ${s.name}\n`)
-      const useExtracted = s.classification !== "full-better"
-      if (useExtracted) {
+      const useWithRule = s.classification !== "full-better"
+      if (useWithRule) {
         const text = await extractRule(s.rule)
         lines.push(text)
       } else {
