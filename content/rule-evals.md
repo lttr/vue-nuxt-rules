@@ -44,9 +44,3 @@ Evaluation of whether explicit rules improve AI code generation output.
 | [composables-progressive-extraction](/rules/composables-progressive-extraction) |                                  -                                   |   -   |       -       |
 
 \- in Eval Improved = Model already applies this pattern without explicit instruction
-
-## Summary
-
-- **10/25** rules improve AI output (40%)
-- **9/25** have ESLint rules (36%)
-- **3/9** ESLint rules have autofix (33%)
