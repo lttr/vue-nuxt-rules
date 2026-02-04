@@ -10,7 +10,7 @@ Props must never be mutated directly. They are readonly data flowing from parent
 
 ## Eslint rule
 
-- https://eslint.vuejs.org/rules/no-mutating-props.html
+- https://eslint.vuejs.org/rules/no-mutating-props.html (vue/essential)
 
 ## Source
 

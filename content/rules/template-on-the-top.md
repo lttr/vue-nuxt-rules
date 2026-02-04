@@ -12,7 +12,7 @@ The template contains the structure of the component. By placing the `<template>
 
 ## Eslint rule
 
-- https://eslint.vuejs.org/rules/component-tags-order.html
+- https://eslint.vuejs.org/rules/block-order.html (vue/recommended, replaces deprecated component-tags-order)
 
 ## Source
 

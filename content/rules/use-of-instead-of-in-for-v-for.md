@@ -10,7 +10,7 @@ Vue allows both `v-for="item in items"` and `v-for="item of items"` syntax. Pref
 
 ## Eslint rule
 
-- https://eslint.vuejs.org/rules/v-for-delimiter-style.html#of
+- https://eslint.vuejs.org/rules/v-for-delimiter-style.html (not in presets, requires config)
 
 ## Source
 

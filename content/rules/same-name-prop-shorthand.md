@@ -12,7 +12,7 @@ This shorthand is similar to ES6 object property shorthand and is supported in V
 
 ## Eslint rule
 
-- https://eslint.vuejs.org/rules/v-bind-style.html#samenameshorthand-always
+- https://eslint.vuejs.org/rules/v-bind-style.html#samenameshorthand-always (vue/strongly-recommended)
 
 ## Source
 

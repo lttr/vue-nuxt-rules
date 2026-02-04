@@ -10,8 +10,8 @@ Script setup with TypeScript is the recommended approach in modern Vue developme
 
 ## Eslint rule
 
-- https://eslint.vuejs.org/rules/block-lang.html#script-lang-js
-- https://eslint.vuejs.org/rules/component-api-style.html
+- https://eslint.vuejs.org/rules/block-lang.html (not in presets, requires config)
+- https://eslint.vuejs.org/rules/component-api-style.html (not in presets, requires config)
 
 ## Source
 

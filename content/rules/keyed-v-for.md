@@ -10,7 +10,7 @@
 
 ## Eslint rule
 
-- https://eslint.vuejs.org/rules/require-v-for-key.html
+- https://eslint.vuejs.org/rules/require-v-for-key.html (vue/essential)
 
 ## Source
 

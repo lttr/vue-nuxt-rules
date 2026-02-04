@@ -26,7 +26,7 @@ Note: Avoid combining `withDefaults` with destructuring as they serve overlappin
 
 ## Eslint rule
 
-- https://eslint.vuejs.org/rules/define-props-destructuring.html
+- https://eslint.vuejs.org/rules/define-props-destructuring.html (not in presets, optional preference)
 
 ## Source
 

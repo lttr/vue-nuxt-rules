@@ -10,7 +10,7 @@ Prefer the type-based declaration syntax for `defineProps()` using a TypeScript 
 
 ## Eslint rule
 
-- https://eslint.vuejs.org/rules/define-props-declaration.html
+- https://eslint.vuejs.org/rules/define-props-declaration.html (not in presets, requires config)
 
 ## Source
 

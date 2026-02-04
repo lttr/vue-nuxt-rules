@@ -17,7 +17,7 @@ For Nuxt, there has to be some exceptions:
 
 ## Eslint rule
 
-- https://eslint.vuejs.org/rules/multi-word-component-names.html#related-rules
+- https://eslint.vuejs.org/rules/multi-word-component-names.html (vue/essential)
 
 ## Source
 

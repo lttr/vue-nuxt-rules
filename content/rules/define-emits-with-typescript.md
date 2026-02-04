@@ -13,7 +13,7 @@ Runtime syntax: `const emit = defineEmits(['eventName'])` (avoid in TypeScript)
 
 ## Eslint rule
 
-- https://eslint.vuejs.org/rules/define-emits-declaration.html
+- https://eslint.vuejs.org/rules/define-emits-declaration.html (not in presets, requires config)
 
 ## Source
 

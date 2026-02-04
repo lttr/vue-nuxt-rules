@@ -10,7 +10,7 @@ Computed properties must be pure functions. They should only derive values from 
 
 ## Eslint rule
 
-- https://eslint.vuejs.org/rules/no-side-effects-in-computed-properties.html
+- https://eslint.vuejs.org/rules/no-side-effects-in-computed-properties.html (vue/essential)
 
 ## Source
 
