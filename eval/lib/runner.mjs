@@ -78,7 +78,7 @@ function spawnClaude(args, { timeout = 180_000, env, cwd } = {}) {
     child.stderr.on("data", (d) => (stderr += d))
 
     const timer = setTimeout(() => {
-      child.kill()
+      try { process.kill(-child.pid, "SIGTERM") } catch { child.kill() }
       reject(new Error(`claude timed out after ${timeout}ms`))
     }, timeout)
 
@@ -140,7 +140,7 @@ async function readWorkspaceFiles(dir) {
  * @param {object} opts
  */
 async function generate(prompt, ruleFile, ruleMode, opts) {
-  const model = opts.model || "claude-opus-4-5-20251101"
+  const model = opts.model || "claude-opus-4-6"
 
   const isolated = await createIsolatedEnv(
     ruleFile || undefined,
@@ -191,6 +191,9 @@ async function generate(prompt, ruleFile, ruleMode, opts) {
     }
 
     // Nothing produced
+    return { code: {}, setup }
+  } catch (err) {
+    setup.error = err.message
     return { code: {}, setup }
   } finally {
     await isolated.cleanup()
@@ -312,11 +315,7 @@ export async function runEval(evalDef, opts = {}) {
       if (includeFull) {
         trial.full.code = await loadVariant(dir, slug, `trial-${t}-full`)
       }
-      trial.withRule.code = await loadVariant(
-        dir,
-        slug,
-        `trial-${t}-with-rule`,
-      )
+      trial.withRule.code = await loadVariant(dir, slug, `trial-${t}-with-rule`)
     }
 
     // Evaluate

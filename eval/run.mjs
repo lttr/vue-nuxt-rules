@@ -92,16 +92,23 @@ const runOne = async (evalDef) => {
   return result
 }
 
-const results = await Promise.all(evals.map((e) => limit(() => runOne(e))))
-allResults.push(...results)
+const results = await Promise.allSettled(
+  evals.map((e) => limit(() => runOne(e))),
+)
+for (const r of results) {
+  if (r.status === "fulfilled") {
+    allResults.push(r.value)
+  } else {
+    console.error(`  ✗ ${r.reason?.message || r.reason}\n`)
+  }
+}
 
 const { summary } = await generateReport(allResults, RESULTS_DIR)
 
 // Update cache with new results
 for (const s of summary) {
   const passRate =
-    parseFloat(s.withRule.split("/")[0]) /
-    parseFloat(s.withRule.split("/")[1])
+    parseFloat(s.withRule.split("/")[0]) / parseFloat(s.withRule.split("/")[1])
   updateCacheEntry(s.name, s.classification, passRate, cache)
 }
 await saveCache(cache)
