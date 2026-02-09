@@ -205,8 +205,7 @@ function buildMarkdown(summary, allResults) {
     lines.push("## Recommendations\n")
     for (const s of recommended) {
       if (hasFull) {
-        const variant =
-          s.classification === "full-better" ? "full" : "withRule"
+        const variant = s.classification === "full-better" ? "full" : "withRule"
         lines.push(`- **${s.name}** → use **${variant}**`)
       } else {
         lines.push(`- **${s.name}** → use rule`)
