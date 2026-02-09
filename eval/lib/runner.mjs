@@ -158,9 +158,14 @@ async function generate(prompt, ruleFile, ruleMode, opts) {
 
   const allowedTools = ["Read", "Write", "Edit"]
 
+  // Explicitly instruct to write files — without this, baseline runs
+  // (no .claude/rules/ dir) tend to output code to stdout instead of
+  // using the Write tool, resulting in empty workspace and 0/N checks.
+  const fullPrompt = prompt.trimEnd() + "\nWrite files to disk."
+
   const setup = {
     model,
-    prompt,
+    prompt: fullPrompt,
     allowedTools,
     ruleFile: ruleFile || null,
     ruleMode: ruleMode || null,
@@ -170,7 +175,7 @@ async function generate(prompt, ruleFile, ruleMode, opts) {
   try {
     const args = [
       "-p",
-      prompt,
+      fullPrompt,
       "--model",
       model,
       "--output-format",
