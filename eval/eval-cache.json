@@ -1,7 +1,8 @@
 {
   "composables-organize-by-concern": {
-    "classification": "already-known",
+    "classification": "with-rule-better",
     "passHistory": [
+      1,
       1,
       1
     ]
@@ -11,12 +12,14 @@
     "passHistory": [
       1,
       1,
+      1,
       1
     ]
   },
   "define-emits-with-typescript": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1,
       1
     ]
@@ -25,12 +28,14 @@
     "classification": "with-rule-better",
     "passHistory": [
       1,
+      1,
       1
     ]
   },
   "destructure-props": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1,
       1
     ]
@@ -40,20 +45,23 @@
     "passHistory": [
       1,
       1,
+      1,
       1
     ]
   },
   "multi-word-component-names": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1,
       1,
       1
     ]
   },
   "prefer-ref-over-reactive-refactor": {
-    "classification": "already-known",
+    "classification": "with-rule-better",
     "passHistory": [
+      1,
       1,
       1
     ]
@@ -62,12 +70,14 @@
     "classification": "with-rule-better",
     "passHistory": [
       1,
+      1,
       1
     ]
   },
   "prefer-vueuse": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1,
       1
     ]
@@ -76,12 +86,14 @@
     "classification": "with-rule-better",
     "passHistory": [
       1,
+      1,
       1
     ]
   },
   "script-setup-with-typescript": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1,
       1
     ]
@@ -90,26 +102,30 @@
     "classification": "with-rule-better",
     "passHistory": [
       1,
+      1,
       1
     ]
   },
   "composables-async-patterns": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
       0.875,
+      1,
       1
     ]
   },
   "composables-cleanup-refactor": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1,
       1
     ]
   },
   "composables-cleanup": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1,
       1
     ]
@@ -120,12 +136,14 @@
       0.5,
       1,
       1,
+      1,
       1
     ]
   },
   "composables-naming": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1,
       1
     ]
@@ -137,29 +155,33 @@
     ]
   },
   "composables-progressive-extraction": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1,
       1
     ]
   },
   "composables-return-refs": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1,
       1
     ]
   },
   "composables-setup-context": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1,
       1
     ]
   },
   "composables-single-responsibility": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1,
       1
     ]
@@ -168,12 +190,14 @@
     "classification": "with-rule-better",
     "passHistory": [
       1,
+      1,
       1
     ]
   },
   "keyed-v-for": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1,
       1
     ]
@@ -182,6 +206,7 @@
     "classification": "with-rule-better",
     "passHistory": [
       1,
+      1,
       1
     ]
   },
@@ -189,19 +214,22 @@
     "classification": "with-rule-better",
     "passHistory": [
       1,
+      1,
       1
     ]
   },
   "prefer-ref-over-reactive": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1,
       1
     ]
   },
   "scoped-styles": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1,
       1
     ]
@@ -210,13 +238,16 @@
     "classification": "with-rule-better",
     "passHistory": [
       1,
+      1,
       1
     ]
   },
   "no-side-effects-in-computed": {
-    "classification": "already-known",
+    "classification": "with-rule-better",
     "passHistory": [
       1,
+      1,
+      0,
       1
     ]
   }
