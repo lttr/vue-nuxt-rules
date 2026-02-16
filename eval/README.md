@@ -4,7 +4,7 @@ Measures which AI rules LLMs already know vs which need explicit injection.
 
 ## How It Works
 
-For each rule:
+Uses `claude -p` with an assembled `.claude/` folder to simulate real usage. For each rule:
 
 1. **Baseline** — generate code without the rule
 2. **With rule** — same prompt, rule in `.claude/rules/`
