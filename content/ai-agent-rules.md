@@ -19,40 +19,60 @@ Each rule is tested against AI models with before/after comparisons. Rules that 
 ```
 # Vue/Nuxt Code Conventions
 
-## Vue Components
+## Vue SFC Structure
 
-- ALWAYS use `<script setup lang="ts">`
-- ALWAYS place `<template>` first in SFC files, before `<script>` and `<style>`
-- ALWAYS use TypeScript type-based syntax for `defineProps()`, no runtime PropType declarations
-- ALWAYS destructure props from `defineProps()` for reactivity and inline defaults; omit destructuring if props unused in script
-- ALWAYS use TypeScript type-based syntax for `defineEmits()`, no runtime array syntax
-- ALWAYS use `:key` on `v-for` elements
-- ALWAYS use `v-for="item of items"` (not `in`) to match JS `for...of`
-- ALWAYS use multi-word component names; exception: Nuxt `pages/` and `layouts/`
+- ALWAYS place the <template> section at the top of Vue SFC files, before <script> and <style> sections
+- ALWAYS use `<script setup lang="ts">` for component's script section
+- PREFER to group by logical concerns rather than grouping by type (data, methods, computed) within components
+
+## Props & State
+
+- ALWAYS use TypeScript type-based syntax for defineProps() instead of runtime PropType declarations
+- ALWAYS use type-based syntax for defineEmits in TypeScript instead of runtime array syntax
+- ALWAYS destructure props directly from defineProps() to maintain reactivity and enable inline defaults; if no props are used in the script, call defineProps() without destructuring
 - ALWAYS use same-name shorthand `:propName` instead of `:propName="propName"`
-- PREFER grouping `<script setup>` code by logical concern, not by API type (refs, computed, watch)
+- NEVER mutate props directly or nested properties; emit changes to parent instead
+- ALWAYS keep computed properties pure (no mutations, no async, no logging)
+- USE `defineModel()` for two-way binding instead of manual prop+emit pairs
 - PREFER `ref()` over `reactive()` for state
 - PREFER VueUse composables over custom implementations for common browser/DOM/state tasks
-- USE `defineModel()` for two-way binding instead of manual prop+emit pairs
-- ALWAYS keep computed properties pure (no mutations, no async, no logging)
-- NEVER mutate props directly or nested properties; emit changes to parent instead
+
+## Template Directives
+
+- ALWAYS use v-for="item of items" instead of v-for="item in items" to match JavaScript for...of syntax
 
 ## Composables
 
-- ALWAYS call composables in `<script setup>` or `setup()` only, never in callbacks, utils, or async contexts
-- ALWAYS prefix names with `use` (e.g. `useMouse`). One composable per file, named `useFeatureName.ts`
-- ALWAYS return a plain object of refs, never wrap return in `reactive()`
-- ALWAYS clean up side effects via `onUnmounted()`; use `onMounted()` for DOM access
-- ALWAYS expose `loading`/`error` refs from async composables; use `watchEffect` for reactive data fetching
-- PREFER `toValue()` to accept refs, getters, or plain values as input
-- PREFER splitting large composables by concern (e.g. `useCart` → `useAddToCart` + `useFetchCart`)
+- PREFER `toValue()` to accept refs, getters, or plain values as input in shared composables
 - PREFER grouping composable code by concern/feature, not by Vue API type (refs, computed, watchers)
 - PREFER extracting calculations to pure helper functions; composable only handles reactivity
-- Only create composables when you need reactivity or lifecycle hooks, otherwise use plain utility functions
-- Composables manage state/logic, not UI side effects, expose state, let components handle presentation
-- Don't extract to shared `composables/` until a second consumer exists (inline → colocated → shared)
+- PREFER plain utility functions over composables unless you need reactivity or lifecycle hooks. Expose state, let components handle presentation.
+```
 
-## Styling
+## Reference Rules
 
-- ALWAYS use `<style scoped>`
+These conventions are already followed by AI models without explicit instruction, but are included here for completeness.
+
+```
+## Vue SFC Structure
+
+- ALWAYS use multi-word component names except for Nuxt pages and layouts
+
+## Template Directives
+
+- ALWAYS use key in v-for loops
+
+## Styles
+
+- ALWAYS use <style scoped> for component styles
+
+## Composables
+
+- ALWAYS call composables in `<script setup>` or `setup()` only — never in callbacks, utils, or async contexts
+- ALWAYS prefix names with `use` (e.g. `useMouse`). One composable per file, named `useFeatureName.ts`
+- ALWAYS return a plain object of refs — never wrap return in `reactive()`
+- ALWAYS clean up side effects via `onUnmounted()`; use `onMounted()` for DOM access
+- ALWAYS expose `loading`/`error` refs from async composables; use `watchEffect` for reactive data fetching
+- PREFER splitting large composables by concern (e.g. `useCart` → `useAddToCart` + `useFetchCart`)
+- PREFER inline composables; extract to shared `composables/` only when a second consumer exists. Ladder: inline → colocated → shared.
 ```
