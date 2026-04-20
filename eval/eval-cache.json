@@ -1,254 +1,242 @@
 {
-  "composables-organize-by-concern": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "composables-thin-composables": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1,
-      1
-    ]
-  },
-  "define-emits-with-typescript": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "define-props-with-typescript": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "destructure-props": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "group-script-by-logical-concerns": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1,
-      1
-    ]
-  },
-  "multi-word-component-names": {
-    "classification": "already-known",
-    "passHistory": [
-      1,
-      1,
-      1,
-      1
-    ]
-  },
-  "prefer-ref-over-reactive-refactor": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "prefer-vueuse-refactor": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "prefer-vueuse": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "same-name-prop-shorthand": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "script-setup-with-typescript": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "use-of-instead-of-in-for-v-for": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
   "composables-async-patterns": {
-    "classification": "already-known",
+    "classification": "with-rule-better",
     "passHistory": [
-      0.875,
-      1,
       1
-    ]
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
   },
   "composables-cleanup-refactor": {
-    "classification": "already-known",
+    "classification": "with-rule-better",
     "passHistory": [
-      1,
-      1,
       1
-    ]
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
   },
   "composables-cleanup": {
-    "classification": "already-known",
+    "classification": "with-rule-better",
     "passHistory": [
-      1,
-      1,
       1
-    ]
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
   },
   "composables-input-flexibility": {
     "classification": "with-rule-better",
     "passHistory": [
-      0.5,
-      1,
-      1,
-      1,
       1
-    ]
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
   },
-  "composables-naming": {
-    "classification": "already-known",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "composables-organize-by-concern-refactor": {
-    "classification": "already-known",
-    "passHistory": [
-      0.5
-    ]
-  },
-  "composables-progressive-extraction": {
-    "classification": "already-known",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "composables-return-refs": {
-    "classification": "already-known",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "composables-setup-context": {
-    "classification": "already-known",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "composables-single-responsibility": {
-    "classification": "already-known",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "composables-vs-utils": {
+  "composables-thin-composables": {
     "classification": "with-rule-better",
     "passHistory": [
-      1,
-      1,
       1
-    ]
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
   },
-  "keyed-v-for": {
-    "classification": "already-known",
+  "define-emits-with-typescript": {
+    "classification": "with-rule-better",
     "passHistory": [
-      1,
-      1,
       1
-    ]
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "define-props-with-typescript": {
+    "classification": "with-rule-better",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "destructure-props": {
+    "classification": "with-rule-better",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "group-script-by-logical-concerns": {
+    "classification": "with-rule-better",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
   },
   "no-mutating-props": {
     "classification": "with-rule-better",
     "passHistory": [
-      1,
-      1,
       1
-    ]
-  },
-  "prefer-definemodel": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "prefer-ref-over-reactive": {
-    "classification": "already-known",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "scoped-styles": {
-    "classification": "already-known",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
-  },
-  "template-on-the-top": {
-    "classification": "with-rule-better",
-    "passHistory": [
-      1,
-      1,
-      1
-    ]
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
   },
   "no-side-effects-in-computed": {
     "classification": "with-rule-better",
     "passHistory": [
-      1,
-      1,
-      0,
       1
-    ]
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "prefer-definemodel": {
+    "classification": "with-rule-better",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "prefer-vueuse-refactor": {
+    "classification": "with-rule-better",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "prefer-vueuse": {
+    "classification": "with-rule-better",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "same-name-prop-shorthand": {
+    "classification": "with-rule-better",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "script-setup-with-typescript": {
+    "classification": "with-rule-better",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "template-on-the-top": {
+    "classification": "with-rule-better",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "use-of-instead-of-in-for-v-for": {
+    "classification": "with-rule-better",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "composables-naming": {
+    "classification": "already-known",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "composables-organize-by-concern": {
+    "classification": "already-known",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "composables-progressive-extraction": {
+    "classification": "already-known",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "composables-return-refs": {
+    "classification": "already-known",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "composables-setup-context": {
+    "classification": "already-known",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "composables-single-responsibility": {
+    "classification": "already-known",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "composables-vs-utils": {
+    "classification": "already-known",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "keyed-v-for": {
+    "classification": "already-known",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "multi-word-component-names": {
+    "classification": "already-known",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "prefer-ref-over-reactive-refactor": {
+    "classification": "already-known",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "prefer-ref-over-reactive": {
+    "classification": "already-known",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
+  },
+  "scoped-styles": {
+    "classification": "already-known",
+    "passHistory": [
+      1
+    ],
+    "model": "claude-opus-4-7",
+    "lastRunAt": "2026-04-17T15:48:20.951Z"
   }
 }
