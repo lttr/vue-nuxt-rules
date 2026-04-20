@@ -7,7 +7,7 @@ const CACHE_PATH = join(__dirname, "..", "eval-cache.json")
 
 /**
  * Load eval cache from disk.
- * @returns {Promise<Record<string, { classification: string, passHistory: number[] }>>}
+ * @returns {Promise<Record<string, { classification: string, passHistory: number[], model?: string, lastRunAt?: string }>>}
  */
 export async function loadCache() {
   try {
@@ -26,14 +26,29 @@ export async function saveCache(cache) {
 }
 
 /**
+ * A cache entry is only reusable when running against the same model
+ * or on the same UTC day. Upgrading models or crossing a day boundary
+ * forces fresh baselines and default trial counts.
+ */
+function isEntryApplicable(entry, model) {
+  if (!entry) return false
+  const today = new Date().toISOString().slice(0, 10)
+  const entryDay = entry.lastRunAt ? entry.lastRunAt.slice(0, 10) : null
+  if (entry.model && model && entry.model === model) return true
+  if (entryDay && entryDay === today) return true
+  return false
+}
+
+/**
  * Determine optimal trial count based on cache history.
  * - 1 trial for already-known rules
  * - 1 trial for stable rules (>90% consistent results)
- * - 2 trials for flaky/new rules
+ * - defaultTrials for flaky/new rules or when cache entry doesn't apply
+ *   (different model, different day).
  */
-export function getTrialCount(evalName, cache, defaultTrials = 2) {
+export function getTrialCount(evalName, cache, defaultTrials = 2, model) {
   const entry = cache[evalName]
-  if (!entry) return defaultTrials
+  if (!isEntryApplicable(entry, model)) return defaultTrials
 
   if (entry.classification === "already-known") return 1
 
@@ -59,17 +74,27 @@ function calcVariance(rates) {
 /**
  * Update cache entry with new eval result.
  */
-export function updateCacheEntry(evalName, classification, passRate, cache) {
+export function updateCacheEntry(
+  evalName,
+  classification,
+  passRate,
+  cache,
+  model,
+) {
   const entry = cache[evalName] || { classification: null, passHistory: [] }
   entry.classification = classification
   entry.passHistory = [...(entry.passHistory || []), passRate].slice(-10)
+  if (model) entry.model = model
+  entry.lastRunAt = new Date().toISOString()
   cache[evalName] = entry
 }
 
 /**
- * Check if rule should skip baseline generation.
+ * Check if rule should skip baseline generation. Only skip when the cache
+ * entry applies (same model or same day) and the rule is already-known.
  */
-export function shouldSkipBaseline(evalName, cache) {
+export function shouldSkipBaseline(evalName, cache, model) {
   const entry = cache[evalName]
-  return entry?.classification === "already-known"
+  if (!isEntryApplicable(entry, model)) return false
+  return entry.classification === "already-known"
 }

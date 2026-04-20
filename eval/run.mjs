@@ -4,7 +4,7 @@ import { parseArgs } from "node:util"
 import { mkdir } from "node:fs/promises"
 import { join } from "node:path"
 import pLimit from "p-limit"
-import { loadEvals, runEval, saveResults } from "./lib/runner.mjs"
+import { loadEvals, runEval, saveResults, DEFAULT_MODEL } from "./lib/runner.mjs"
 import { generateReport } from "./lib/reporter.mjs"
 import {
   loadCache,
@@ -46,6 +46,7 @@ if (evals.length === 0) {
 console.log(`Running ${evals.length} eval(s), results → ${RESULTS_DIR}\n`)
 
 const cache = await loadCache()
+const model = opts.model || DEFAULT_MODEL
 const allResults = []
 
 const concurrency = parseInt(opts.concurrency) || 3
@@ -57,12 +58,12 @@ const runOne = async (evalDef) => {
   const slug = evalDef.rule.replace(".md", "")
   const trialCount = opts.trials
     ? parseInt(opts.trials)
-    : getTrialCount(evalDef.name, cache)
+    : getTrialCount(evalDef.name, cache, 2, model)
   console.log(`▸ ${slug} (${trialCount} trial${trialCount > 1 ? "s" : ""})`)
 
   const result = await runEval(evalDef, {
     trials: trialCount,
-    model: opts.model,
+    model,
     includeFull: opts.full,
     skipGeneration: opts["skip-generation"],
     resultsDir: RESULTS_DIR,
@@ -109,7 +110,7 @@ const { summary } = await generateReport(allResults, RESULTS_DIR)
 for (const s of summary) {
   const passRate =
     parseFloat(s.withRule.split("/")[0]) / parseFloat(s.withRule.split("/")[1])
-  updateCacheEntry(s.name, s.classification, passRate, cache)
+  updateCacheEntry(s.name, s.classification, passRate, cache, model)
 }
 await saveCache(cache)
 

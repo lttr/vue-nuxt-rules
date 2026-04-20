@@ -20,7 +20,7 @@ Uses `claude -p` with an assembled `.claude/` folder to simulate real usage. For
 node run.mjs                              # all evals
 node run.mjs --eval prefer-definemodel    # single eval
 node run.mjs --trials 3                   # override trials (default: 2)
-node run.mjs --model claude-sonnet-4-20250514
+node run.mjs --model claude-sonnet-4-6
 node run.mjs --concurrency 5              # parallel evals (default: 3)
 node run.mjs --full                       # also test full rule markdown (3 variants)
 node run.mjs --skip-generation --results-dir results/2026-01-29T08-00-16

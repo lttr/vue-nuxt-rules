@@ -15,6 +15,8 @@ import { extractRule, getRulePath } from "./extract-rule.mjs"
 import { evaluate } from "./evaluator.mjs"
 import { shouldSkipBaseline } from "./cache.mjs"
 
+export const DEFAULT_MODEL = "claude-opus-4-7"
+
 /**
  * Create an isolated temp environment for running claude.
  * Copies credentials so claude can authenticate, and optionally
@@ -140,7 +142,7 @@ async function readWorkspaceFiles(dir) {
  * @param {object} opts
  */
 async function generate(prompt, ruleFile, ruleMode, opts) {
-  const model = opts.model || "claude-opus-4-6"
+  const model = opts.model || DEFAULT_MODEL
 
   const isolated = await createIsolatedEnv(
     ruleFile || undefined,
@@ -262,7 +264,7 @@ export async function runEval(evalDef, opts = {}) {
   const trials = opts.trials ?? evalDef.trials ?? 2
   const includeFull = opts.includeFull ?? false
   const cache = opts.cache || {}
-  const skipBaseline = shouldSkipBaseline(evalDef.name, cache)
+  const skipBaseline = shouldSkipBaseline(evalDef.name, cache, opts.model)
 
   const results = {
     name: evalDef.name,

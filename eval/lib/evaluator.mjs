@@ -108,7 +108,7 @@ function evalRegex(codeMap, check) {
  * Batch multiple AI judge checks into a single Claude call.
  */
 async function evalAiJudgeBatch(codeMap, checks, opts) {
-  const model = opts.judgeModel || "claude-sonnet-4-20250514"
+  const model = opts.judgeModel || "claude-sonnet-4-6"
   const codeBlock = formatForPrompt(codeMap)
 
   const criteriaList = checks
