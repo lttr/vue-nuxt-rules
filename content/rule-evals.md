@@ -8,7 +8,7 @@ Evaluation of whether explicit rules improve AI code generation output.
 - **Approach**: Compare baseline (no rule) vs extracted rule (concise "Rule for AI agents" version)
 - **Metric**: Does providing the rule improve output compared to model's inherent knowledge?
 - **Code**: [eval suite on GitHub](https://github.com/lttr/vue-nuxt-rules/tree/master/eval)
-- **Model comparison**: [per-rule results across Opus 4.5, 4.6, 4.7](/rule-evals-model-comparison)
+- **Model comparison**: [per-rule results across Opus 4.5, 4.6, 4.7 and Sonnet 4.6](/rule-evals-model-comparison)
 
 ## Results
 

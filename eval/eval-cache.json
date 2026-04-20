@@ -1,242 +1,272 @@
 {
   "composables-async-patterns": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "composables-cleanup-refactor": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "composables-cleanup": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "composables-input-flexibility": {
     "classification": "with-rule-better",
     "passHistory": [
-      1
+      1,
+      0.5
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "composables-thin-composables": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "define-emits-with-typescript": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "define-props-with-typescript": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "destructure-props": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "group-script-by-logical-concerns": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "no-mutating-props": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "no-side-effects-in-computed": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "prefer-definemodel": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "prefer-vueuse-refactor": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "prefer-vueuse": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "same-name-prop-shorthand": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "script-setup-with-typescript": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "template-on-the-top": {
-    "classification": "with-rule-better",
+    "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "use-of-instead-of-in-for-v-for": {
     "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "composables-naming": {
     "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "composables-organize-by-concern": {
     "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "composables-progressive-extraction": {
     "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "composables-return-refs": {
     "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "composables-setup-context": {
     "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "composables-single-responsibility": {
     "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "composables-vs-utils": {
-    "classification": "already-known",
+    "classification": "with-rule-better",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "keyed-v-for": {
     "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "multi-word-component-names": {
     "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "prefer-ref-over-reactive-refactor": {
     "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "prefer-ref-over-reactive": {
     "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   },
   "scoped-styles": {
     "classification": "already-known",
     "passHistory": [
+      1,
       1
     ],
-    "model": "claude-opus-4-7",
-    "lastRunAt": "2026-04-17T15:48:20.951Z"
+    "model": "claude-sonnet-4-6",
+    "lastRunAt": "2026-04-20T08:50:14.263Z"
   }
 }
