@@ -15,7 +15,7 @@ import { extractRule, getRulePath } from "./extract-rule.mjs"
 import { evaluate } from "./evaluator.mjs"
 import { shouldSkipBaseline } from "./cache.mjs"
 
-export const DEFAULT_MODEL = "claude-opus-4-7"
+export const DEFAULT_MODEL = "claude-opus-4-8"
 
 /**
  * Create an isolated temp environment for running claude.
@@ -80,7 +80,11 @@ function spawnClaude(args, { timeout = 180_000, env, cwd } = {}) {
     child.stderr.on("data", (d) => (stderr += d))
 
     const timer = setTimeout(() => {
-      try { process.kill(-child.pid, "SIGTERM") } catch { child.kill() }
+      try {
+        process.kill(-child.pid, "SIGTERM")
+      } catch {
+        child.kill()
+      }
       reject(new Error(`claude timed out after ${timeout}ms`))
     }, timeout)
 
