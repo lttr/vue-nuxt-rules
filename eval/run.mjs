@@ -4,7 +4,12 @@ import { parseArgs } from "node:util"
 import { mkdir } from "node:fs/promises"
 import { join } from "node:path"
 import pLimit from "p-limit"
-import { loadEvals, runEval, saveResults, DEFAULT_MODEL } from "./lib/runner.mjs"
+import {
+  loadEvals,
+  runEval,
+  saveResults,
+  DEFAULT_MODEL,
+} from "./lib/runner.mjs"
 import { generateReport } from "./lib/reporter.mjs"
 import {
   loadCache,
@@ -18,6 +23,7 @@ const { values: opts } = parseArgs({
     eval: { type: "string" },
     trials: { type: "string" },
     model: { type: "string" },
+    effort: { type: "string" },
     full: { type: "boolean", default: false },
     "skip-generation": { type: "boolean", default: false },
     "results-dir": { type: "string" },
@@ -47,23 +53,26 @@ console.log(`Running ${evals.length} eval(s), results → ${RESULTS_DIR}\n`)
 
 const cache = await loadCache()
 const model = opts.model || DEFAULT_MODEL
+const effort = opts.effort || null
 const allResults = []
 
 const concurrency = parseInt(opts.concurrency) || 3
 const limit = pLimit(concurrency)
 
+console.log(`Model: ${model}${effort ? `  Effort: ${effort}` : ""}`)
 console.log(`Concurrency: ${concurrency}\n`)
 
 const runOne = async (evalDef) => {
   const slug = evalDef.rule.replace(".md", "")
   const trialCount = opts.trials
     ? parseInt(opts.trials)
-    : getTrialCount(evalDef.name, cache, 2, model)
+    : getTrialCount(evalDef.name, cache, 2, model, effort)
   console.log(`▸ ${slug} (${trialCount} trial${trialCount > 1 ? "s" : ""})`)
 
   const result = await runEval(evalDef, {
     trials: trialCount,
     model,
+    effort,
     includeFull: opts.full,
     skipGeneration: opts["skip-generation"],
     resultsDir: RESULTS_DIR,
@@ -110,7 +119,7 @@ const { summary } = await generateReport(allResults, RESULTS_DIR)
 for (const s of summary) {
   const passRate =
     parseFloat(s.withRule.split("/")[0]) / parseFloat(s.withRule.split("/")[1])
-  updateCacheEntry(s.name, s.classification, passRate, cache, model)
+  updateCacheEntry(s.name, s.classification, passRate, cache, model, effort)
 }
 await saveCache(cache)
 

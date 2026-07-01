@@ -30,8 +30,11 @@ export async function saveCache(cache) {
  * or on the same UTC day. Upgrading models or crossing a day boundary
  * forces fresh baselines and default trial counts.
  */
-function isEntryApplicable(entry, model) {
+function isEntryApplicable(entry, model, effort = null) {
   if (!entry) return false
+  // Effort is part of the run identity: a mismatch always forces fresh runs,
+  // even on the same day and model.
+  if ((entry.effort || null) !== (effort || null)) return false
   const today = new Date().toISOString().slice(0, 10)
   const entryDay = entry.lastRunAt ? entry.lastRunAt.slice(0, 10) : null
   if (entry.model && model && entry.model === model) return true
@@ -46,9 +49,15 @@ function isEntryApplicable(entry, model) {
  * - defaultTrials for flaky/new rules or when cache entry doesn't apply
  *   (different model, different day).
  */
-export function getTrialCount(evalName, cache, defaultTrials = 2, model) {
+export function getTrialCount(
+  evalName,
+  cache,
+  defaultTrials = 2,
+  model,
+  effort = null,
+) {
   const entry = cache[evalName]
-  if (!isEntryApplicable(entry, model)) return defaultTrials
+  if (!isEntryApplicable(entry, model, effort)) return defaultTrials
 
   if (entry.classification === "already-known") return 1
 
@@ -80,11 +89,13 @@ export function updateCacheEntry(
   passRate,
   cache,
   model,
+  effort = null,
 ) {
   const entry = cache[evalName] || { classification: null, passHistory: [] }
   entry.classification = classification
   entry.passHistory = [...(entry.passHistory || []), passRate].slice(-10)
   if (model) entry.model = model
+  entry.effort = effort || null
   entry.lastRunAt = new Date().toISOString()
   cache[evalName] = entry
 }
@@ -93,8 +104,8 @@ export function updateCacheEntry(
  * Check if rule should skip baseline generation. Only skip when the cache
  * entry applies (same model or same day) and the rule is already-known.
  */
-export function shouldSkipBaseline(evalName, cache, model) {
+export function shouldSkipBaseline(evalName, cache, model, effort = null) {
   const entry = cache[evalName]
-  if (!isEntryApplicable(entry, model)) return false
+  if (!isEntryApplicable(entry, model, effort)) return false
   return entry.classification === "already-known"
 }

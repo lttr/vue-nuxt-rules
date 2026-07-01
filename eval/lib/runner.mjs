@@ -147,6 +147,7 @@ async function readWorkspaceFiles(dir) {
  */
 async function generate(prompt, ruleFile, ruleMode, opts) {
   const model = opts.model || DEFAULT_MODEL
+  const effort = opts.effort || null
 
   const isolated = await createIsolatedEnv(
     ruleFile || undefined,
@@ -171,6 +172,7 @@ async function generate(prompt, ruleFile, ruleMode, opts) {
 
   const setup = {
     model,
+    effort,
     prompt: fullPrompt,
     allowedTools,
     ruleFile: ruleFile || null,
@@ -184,6 +186,7 @@ async function generate(prompt, ruleFile, ruleMode, opts) {
       fullPrompt,
       "--model",
       model,
+      ...(effort ? ["--effort", effort] : []),
       "--output-format",
       "text",
       "--allowedTools",
@@ -217,6 +220,7 @@ async function generate(prompt, ruleFile, ruleMode, opts) {
 function formatSetupMd(setup) {
   const lines = ["# Setup\n"]
   lines.push(`- **Model**: ${setup.model}`)
+  if (setup.effort) lines.push(`- **Effort**: ${setup.effort}`)
   lines.push(`- **Rule file**: ${setup.ruleFile || "none"}`)
   lines.push(`- **Rule mode**: ${setup.ruleMode || "n/a"}`)
   lines.push(`- **Allowed tools**: ${setup.allowedTools.join(", ")}`)
@@ -268,7 +272,12 @@ export async function runEval(evalDef, opts = {}) {
   const trials = opts.trials ?? evalDef.trials ?? 2
   const includeFull = opts.includeFull ?? false
   const cache = opts.cache || {}
-  const skipBaseline = shouldSkipBaseline(evalDef.name, cache, opts.model)
+  const skipBaseline = shouldSkipBaseline(
+    evalDef.name,
+    cache,
+    opts.model,
+    opts.effort,
+  )
 
   const results = {
     name: evalDef.name,
